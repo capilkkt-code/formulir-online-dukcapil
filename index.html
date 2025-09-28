@@ -1,5 +1,47 @@
 <!DOCTYPE html>
 <html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulir Permohonan Dokumen Kependudukan</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            box-sizing: border-box;
+        }
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .captcha-box {
+            background: #f8f9fa;
+            border: 2px dashed #dee2e6;
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Courier New', monospace;
+            font-size: 24px;
+            font-weight: bold;
+            letter-spacing: 3px;
+            color: #495057;
+        }
+        .camera-preview {
+            width: 200px;
+            height: 150px;
+            background: #f8f9fa;
+            border: 2px dashed #dee2e6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+        }
+    </style>
+</head>
 <body class="gradient-bg min-h-screen py-8">
     <div class="container mx-auto px-4 max-w-4xl">
         <!-- Header -->
@@ -185,27 +227,46 @@
                 <!-- Upload File -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">
-                        📎 Upload File Pendukung (PDF)
+                        📎 Upload File Pendukung (PDF) - Wajib
                     </label>
-                    <input type="file" id="filePendukung" accept=".pdf" required
+                    <input type="file" id="filePendukung" accept=".pdf" required onchange="validatePDFFile()"
                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                    <p class="text-sm text-gray-500 mt-1">File harus dalam format PDF, maksimal 5MB</p>
+                    <div class="mt-2 space-y-1">
+                        <p class="text-sm text-gray-500">• File harus dalam format PDF</p>
+                        <p class="text-sm text-gray-500">• Ukuran maksimal 5MB</p>
+                        <p class="text-sm text-gray-500">• File akan dikonversi ke Base64 untuk dikirim</p>
+                    </div>
+                    <div id="fileStatus" class="mt-2 text-sm"></div>
                 </div>
 
                 <!-- Verifikasi Biometrik -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">
-                        📸 Verifikasi Biometrik
+                        📸 Verifikasi Biometrik (Wajib)
                     </label>
                     <div class="flex flex-col items-center space-y-4">
+                        <video id="cameraVideo" width="300" height="225" autoplay style="display: none;" class="border-2 border-gray-300 rounded-lg"></video>
                         <div class="camera-preview" id="cameraPreview">
-                            <span class="text-gray-500">📷 Klik untuk ambil foto</span>
+                            <span class="text-gray-500">📷 Klik "Aktifkan Kamera" untuk mulai</span>
                         </div>
-                        <button type="button" id="captureBtn" onclick="capturePhoto()"
-                                class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
-                            Ambil Foto Wajah
-                        </button>
-                        <canvas id="photoCanvas" style="display: none;" width="200" height="150"></canvas>
+                        <canvas id="photoCanvas" width="300" height="225" style="display: none;"></canvas>
+                        
+                        <div class="flex space-x-3">
+                            <button type="button" id="startCameraBtn" onclick="startCamera()"
+                                    class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
+                                📹 Aktifkan Kamera
+                            </button>
+                            <button type="button" id="captureBtn" onclick="capturePhoto()" disabled
+                                    class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:bg-gray-400">
+                                📸 Ambil Foto
+                            </button>
+                            <button type="button" id="retakeBtn" onclick="retakePhoto()" style="display: none;"
+                                    class="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors">
+                                🔄 Foto Ulang
+                            </button>
+                        </div>
+                        
+                        <div id="photoStatus" class="text-sm text-gray-600"></div>
                     </div>
                 </div>
 
@@ -288,6 +349,9 @@
 
         let currentCaptcha = '';
         let photoTaken = false;
+        let cameraStream = null;
+        let capturedPhotoData = null;
+        let validPDFFile = null;
 
         // Set tanggal hari ini
         document.getElementById('tanggalPermohonan').valueAsDate = new Date();
@@ -320,22 +384,131 @@
             document.getElementById('captchaText').textContent = captcha;
         }
 
-        // Capture photo simulation
+        // Aktifkan kamera
+        async function startCamera() {
+            try {
+                const video = document.getElementById('cameraVideo');
+                const preview = document.getElementById('cameraPreview');
+                const startBtn = document.getElementById('startCameraBtn');
+                const captureBtn = document.getElementById('captureBtn');
+                
+                cameraStream = await navigator.mediaDevices.getUserMedia({ 
+                    video: { 
+                        width: 300, 
+                        height: 225,
+                        facingMode: 'user' // Kamera depan untuk selfie
+                    } 
+                });
+                
+                video.srcObject = cameraStream;
+                video.style.display = 'block';
+                preview.style.display = 'none';
+                
+                startBtn.disabled = true;
+                startBtn.textContent = '📹 Kamera Aktif';
+                captureBtn.disabled = false;
+                
+                document.getElementById('photoStatus').innerHTML = 
+                    '<span class="text-green-600">✅ Kamera berhasil diaktifkan. Posisikan wajah Anda dan klik "Ambil Foto"</span>';
+                
+            } catch (error) {
+                console.error('Error accessing camera:', error);
+                document.getElementById('photoStatus').innerHTML = 
+                    '<span class="text-red-600">❌ Gagal mengakses kamera. Pastikan browser memiliki izin kamera.</span>';
+            }
+        }
+
+        // Ambil foto dari kamera
         function capturePhoto() {
+            const video = document.getElementById('cameraVideo');
             const canvas = document.getElementById('photoCanvas');
             const ctx = canvas.getContext('2d');
             const preview = document.getElementById('cameraPreview');
             
-            // Simulate photo capture
-            ctx.fillStyle = '#4F46E5';
-            ctx.fillRect(0, 0, 200, 150);
-            ctx.fillStyle = 'white';
-            ctx.font = '16px Arial';
-            ctx.textAlign = 'center';
-            ctx.fillText('📷 Foto Tersimpan', 100, 80);
+            // Gambar frame video ke canvas
+            ctx.drawImage(video, 0, 0, 300, 225);
             
-            preview.innerHTML = '<span class="text-green-600">✅ Foto berhasil diambil</span>';
+            // Konversi ke base64
+            capturedPhotoData = canvas.toDataURL('image/jpeg', 0.8);
+            
+            // Tampilkan hasil foto
+            canvas.style.display = 'block';
+            video.style.display = 'none';
+            
+            // Update UI
+            document.getElementById('captureBtn').style.display = 'none';
+            document.getElementById('retakeBtn').style.display = 'inline-block';
+            
+            document.getElementById('photoStatus').innerHTML = 
+                '<span class="text-green-600">✅ Foto berhasil diambil! Klik "Foto Ulang" jika ingin mengambil ulang.</span>';
+            
             photoTaken = true;
+            
+            // Hentikan kamera
+            if (cameraStream) {
+                cameraStream.getTracks().forEach(track => track.stop());
+            }
+        }
+
+        // Foto ulang
+        function retakePhoto() {
+            const video = document.getElementById('cameraVideo');
+            const canvas = document.getElementById('photoCanvas');
+            const captureBtn = document.getElementById('captureBtn');
+            const retakeBtn = document.getElementById('retakeBtn');
+            
+            canvas.style.display = 'none';
+            captureBtn.style.display = 'inline-block';
+            captureBtn.disabled = false;
+            retakeBtn.style.display = 'none';
+            
+            capturedPhotoData = null;
+            photoTaken = false;
+            
+            // Aktifkan kamera lagi
+            startCamera();
+        }
+
+        // Validasi file PDF
+        function validatePDFFile() {
+            const fileInput = document.getElementById('filePendukung');
+            const fileStatus = document.getElementById('fileStatus');
+            
+            if (fileInput.files.length === 0) {
+                fileStatus.innerHTML = '';
+                validPDFFile = null;
+                return;
+            }
+            
+            const file = fileInput.files[0];
+            
+            // Validasi tipe file
+            if (file.type !== 'application/pdf') {
+                fileStatus.innerHTML = '<span class="text-red-600">❌ File harus dalam format PDF!</span>';
+                fileInput.value = '';
+                validPDFFile = null;
+                return;
+            }
+            
+            // Validasi ukuran file (5MB = 5 * 1024 * 1024 bytes)
+            if (file.size > 5 * 1024 * 1024) {
+                fileStatus.innerHTML = '<span class="text-red-600">❌ Ukuran file maksimal 5MB!</span>';
+                fileInput.value = '';
+                validPDFFile = null;
+                return;
+            }
+            
+            // File valid
+            validPDFFile = file;
+            const fileSizeKB = Math.round(file.size / 1024);
+            fileStatus.innerHTML = `<span class="text-green-600">✅ File PDF valid (${fileSizeKB} KB)</span>`;
+            
+            // Konversi ke Base64 untuk dikirim
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                validPDFFile.base64Data = e.target.result;
+            };
+            reader.readAsDataURL(file);
         }
 
         // Form submission
@@ -349,27 +522,15 @@
                 return;
             }
             
-            // Validasi foto
-            if (!photoTaken) {
-                alert('Silakan ambil foto wajah terlebih dahulu!');
+            // Validasi foto biometrik
+            if (!photoTaken || !capturedPhotoData) {
+                alert('Silakan ambil foto wajah untuk verifikasi biometrik terlebih dahulu!');
                 return;
             }
             
             // Validasi file PDF
-            const fileInput = document.getElementById('filePendukung');
-            if (fileInput.files.length === 0) {
-                alert('Silakan upload file pendukung!');
-                return;
-            }
-            
-            const file = fileInput.files[0];
-            if (file.type !== 'application/pdf') {
-                alert('File harus dalam format PDF!');
-                return;
-            }
-            
-            if (file.size > 5 * 1024 * 1024) {
-                alert('Ukuran file maksimal 5MB!');
+            if (!validPDFFile || !validPDFFile.base64Data) {
+                alert('Silakan upload file pendukung dalam format PDF!');
                 return;
             }
             
@@ -393,15 +554,16 @@
                 kecamatan: document.getElementById('kecamatan').value,
                 desa: document.getElementById('desa').value,
                 rtRw: document.getElementById('rtRw').value,
-                fileName: file.name,
-                fileSize: file.size,
+                fileName: validPDFFile.name,
+                fileSize: validPDFFile.size,
+                filePDF: validPDFFile.base64Data, // Data PDF dalam Base64
+                fotoBiometrik: capturedPhotoData, // Data foto dalam Base64
                 timestamp: new Date().toISOString()
             };
             
-            // Simulate sending to Google Sheets (replace with actual implementation)
+            // Kirim data ke Google Sheets
             try {
-                // Here you would implement the actual Google Sheets API call
-                await simulateSubmission(formData);
+                await submitToGoogleSheets(formData);
                 
                 // Hide loading and show success
                 document.getElementById('loadingModal').classList.add('hidden');
@@ -416,14 +578,56 @@
             }
         });
         
-        // Simulate submission
-        function simulateSubmission(data) {
-            return new Promise((resolve) => {
-                setTimeout(() => {
-                    console.log('Data yang akan dikirim ke Google Sheets:', data);
-                    resolve();
-                }, 2000);
-            });
+        // Kirim data ke Google Sheets
+        async function submitToGoogleSheets(data) {
+            // URL Web App Google Apps Script
+            const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzJeBD9CJ0w0zdqAbVVW4R7Oo3DyNme0iqjSSQsy715JUDqNpDN9bF2TQHGvKvWTPAg/exec';
+            
+            try {
+                // Kirim sebagai URL-encoded form data
+                const params = new URLSearchParams();
+                params.append('nikPemohon', data.nikPemohon);
+                params.append('namaPemohon', data.namaPemohon);
+                params.append('tanggalPermohonan', data.tanggalPermohonan);
+                params.append('jenisPermohonan', data.jenisPermohonan);
+                params.append('bermohonAtasNama', data.bermohonAtasNama);
+                params.append('tempatLahir', data.tempatLahir);
+                params.append('tanggalLahir', data.tanggalLahir);
+                params.append('jenisKelamin', data.jenisKelamin);
+                params.append('statusPerkawinan', data.statusPerkawinan);
+                params.append('namaIbu', data.namaIbu);
+                params.append('namaAyah', data.namaAyah);
+                params.append('kecamatan', data.kecamatan);
+                params.append('desa', data.desa);
+                params.append('rtRw', data.rtRw);
+                params.append('fileName', data.fileName);
+                params.append('fileSize', data.fileSize);
+                params.append('filePDF', data.filePDF);
+                params.append('fotoBiometrik', data.fotoBiometrik);
+                params.append('timestamp', data.timestamp);
+                
+                const response = await fetch(GOOGLE_APPS_SCRIPT_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: params.toString()
+                });
+                
+                // Coba baca response jika memungkinkan
+                try {
+                    const result = await response.text();
+                    console.log('Response:', result);
+                    return { success: true, response: result };
+                } catch (e) {
+                    // Jika tidak bisa baca response, anggap berhasil
+                    return { success: true };
+                }
+                
+            } catch (error) {
+                console.error('Error:', error);
+                throw new Error('Gagal mengirim data ke server');
+            }
         }
         
         function closeSuccessModal() {
@@ -431,13 +635,38 @@
             document.getElementById('successModal').classList.remove('flex');
             document.getElementById('applicationForm').reset();
             document.getElementById('tanggalPermohonan').valueAsDate = new Date();
-            document.getElementById('cameraPreview').innerHTML = '<span class="text-gray-500">📷 Klik untuk ambil foto</span>';
+            
+            // Reset kamera dan foto
+            document.getElementById('cameraPreview').innerHTML = '<span class="text-gray-500">📷 Klik "Aktifkan Kamera" untuk mulai</span>';
+            document.getElementById('cameraPreview').style.display = 'flex';
+            document.getElementById('cameraVideo').style.display = 'none';
+            document.getElementById('photoCanvas').style.display = 'none';
+            document.getElementById('startCameraBtn').disabled = false;
+            document.getElementById('startCameraBtn').textContent = '📹 Aktifkan Kamera';
+            document.getElementById('captureBtn').disabled = true;
+            document.getElementById('captureBtn').style.display = 'inline-block';
+            document.getElementById('retakeBtn').style.display = 'none';
+            document.getElementById('photoStatus').innerHTML = '';
+            
+            // Reset file
+            document.getElementById('fileStatus').innerHTML = '';
+            
+            // Reset variables
             photoTaken = false;
+            capturedPhotoData = null;
+            validPDFFile = null;
+            
+            // Stop camera if active
+            if (cameraStream) {
+                cameraStream.getTracks().forEach(track => track.stop());
+                cameraStream = null;
+            }
+            
             generateCaptcha();
         }
         
         // Initialize
         generateCaptcha();
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'985fff321341b486',t:'MTc1OTAyODQ5My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98604de1260d2739',t:'MTc1OTAzMTcxNi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
