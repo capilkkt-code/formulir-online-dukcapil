@@ -384,6 +384,12 @@
             document.getElementById('captchaText').textContent = captcha;
         }
 
+        // Deteksi apakah perangkat mobile
+        function isMobileDevice() {
+            return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
+                   (navigator.maxTouchPoints && navigator.maxTouchPoints > 2 && /MacIntel/.test(navigator.platform));
+        }
+
         // Aktifkan kamera
         async function startCamera() {
             const video = document.getElementById('cameraVideo');
@@ -402,49 +408,101 @@
                 if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
                     throw new Error('Browser tidak mendukung akses kamera');
                 }
+
+                // Deteksi perangkat mobile
+                const isMobile = isMobileDevice();
+                console.log('Perangkat mobile:', isMobile);
                 
-                // Coba beberapa konfigurasi kamera
-                let constraints = [
-                    // Coba kamera depan dulu
-                    { 
-                        video: { 
-                            width: { ideal: 300 }, 
-                            height: { ideal: 225 },
-                            facingMode: 'user'
-                        } 
-                    },
-                    // Jika gagal, coba kamera belakang
-                    { 
-                        video: { 
-                            width: { ideal: 300 }, 
-                            height: { ideal: 225 },
-                            facingMode: 'environment'
-                        } 
-                    },
-                    // Jika masih gagal, coba tanpa facingMode
-                    { 
-                        video: { 
-                            width: { ideal: 300 }, 
-                            height: { ideal: 225 }
-                        } 
-                    },
-                    // Terakhir, coba konfigurasi paling sederhana
-                    { video: true }
-                ];
+                // Konfigurasi kamera yang dioptimalkan untuk mobile dan desktop
+                let constraints = [];
+                
+                if (isMobile) {
+                    // Konfigurasi khusus mobile
+                    constraints = [
+                        // Mobile: Kamera depan dengan resolusi rendah
+                        { 
+                            video: { 
+                                width: { min: 240, ideal: 320, max: 640 }, 
+                                height: { min: 180, ideal: 240, max: 480 },
+                                facingMode: 'user'
+                            } 
+                        },
+                        // Mobile: Kamera belakang dengan resolusi rendah
+                        { 
+                            video: { 
+                                width: { min: 240, ideal: 320, max: 640 }, 
+                                height: { min: 180, ideal: 240, max: 480 },
+                                facingMode: 'environment'
+                            } 
+                        },
+                        // Mobile: Tanpa facingMode, resolusi rendah
+                        { 
+                            video: { 
+                                width: { min: 240, ideal: 320, max: 640 }, 
+                                height: { min: 180, ideal: 240, max: 480 }
+                            } 
+                        },
+                        // Mobile: Konfigurasi paling sederhana
+                        { 
+                            video: { 
+                                width: { ideal: 320 }, 
+                                height: { ideal: 240 }
+                            } 
+                        },
+                        // Mobile: Fallback terakhir
+                        { video: true }
+                    ];
+                } else {
+                    // Konfigurasi desktop (seperti sebelumnya)
+                    constraints = [
+                        { 
+                            video: { 
+                                width: { ideal: 300 }, 
+                                height: { ideal: 225 },
+                                facingMode: 'user'
+                            } 
+                        },
+                        { 
+                            video: { 
+                                width: { ideal: 300 }, 
+                                height: { ideal: 225 },
+                                facingMode: 'environment'
+                            } 
+                        },
+                        { 
+                            video: { 
+                                width: { ideal: 300 }, 
+                                height: { ideal: 225 }
+                            } 
+                        },
+                        { video: true }
+                    ];
+                }
                 
                 let stream = null;
                 let lastError = null;
                 
                 // Coba setiap konfigurasi sampai berhasil
-                for (let constraint of constraints) {
+                for (let i = 0; i < constraints.length; i++) {
                     try {
-                        console.log('Mencoba konfigurasi kamera:', constraint);
-                        stream = await navigator.mediaDevices.getUserMedia(constraint);
+                        console.log(`Mencoba konfigurasi ${i + 1}/${constraints.length}:`, constraints[i]);
+                        
+                        // Update status untuk setiap percobaan
+                        document.getElementById('photoStatus').innerHTML = 
+                            `<span class="text-blue-600">🔄 Mencoba konfigurasi ${i + 1}/${constraints.length}...</span>`;
+                        
+                        stream = await navigator.mediaDevices.getUserMedia(constraints[i]);
+                        console.log('Konfigurasi berhasil:', constraints[i]);
                         break; // Berhasil, keluar dari loop
                     } catch (err) {
-                        console.log('Konfigurasi gagal:', err.message);
+                        console.log(`Konfigurasi ${i + 1} gagal:`, err.message);
                         lastError = err;
-                        continue; // Coba konfigurasi berikutnya
+                        
+                        // Tunggu sebentar sebelum mencoba konfigurasi berikutnya
+                        if (i < constraints.length - 1) {
+                            await new Promise(resolve => setTimeout(resolve, 500));
+                        }
+                        continue;
                     }
                 }
                 
@@ -454,20 +512,59 @@
                 
                 cameraStream = stream;
                 
-                // Set video source dan tunggu sampai ready
+                // Set video source
                 video.srcObject = stream;
                 
-                // Tunggu video siap diputar
+                // Untuk mobile, set atribut tambahan
+                if (isMobile) {
+                    video.setAttribute('playsinline', 'true');
+                    video.setAttribute('webkit-playsinline', 'true');
+                    video.muted = true; // Penting untuk autoplay di mobile
+                }
+                
+                // Tunggu video siap diputar dengan timeout yang lebih panjang untuk mobile
+                const timeoutDuration = isMobile ? 15000 : 10000;
+                
                 await new Promise((resolve, reject) => {
-                    video.onloadedmetadata = () => {
-                        video.play()
-                            .then(resolve)
-                            .catch(reject);
-                    };
-                    video.onerror = reject;
+                    const timeoutId = setTimeout(() => {
+                        reject(new Error('Timeout loading video'));
+                    }, timeoutDuration);
                     
-                    // Timeout jika terlalu lama
-                    setTimeout(() => reject(new Error('Timeout loading video')), 10000);
+                    video.onloadedmetadata = () => {
+                        clearTimeout(timeoutId);
+                        console.log('Video metadata loaded');
+                        
+                        // Untuk mobile, coba play dengan promise
+                        const playPromise = video.play();
+                        
+                        if (playPromise !== undefined) {
+                            playPromise
+                                .then(() => {
+                                    console.log('Video playing successfully');
+                                    resolve();
+                                })
+                                .catch((err) => {
+                                    console.log('Play error:', err);
+                                    // Coba lagi tanpa autoplay
+                                    video.autoplay = false;
+                                    setTimeout(() => {
+                                        video.play().then(resolve).catch(reject);
+                                    }, 100);
+                                });
+                        } else {
+                            resolve();
+                        }
+                    };
+                    
+                    video.onerror = (err) => {
+                        clearTimeout(timeoutId);
+                        reject(err);
+                    };
+                    
+                    // Trigger loading jika belum dimulai
+                    if (video.readyState === 0) {
+                        video.load();
+                    }
                 });
                 
                 // Tampilkan video dan sembunyikan preview
@@ -478,8 +575,9 @@
                 startBtn.textContent = '📹 Kamera Aktif';
                 captureBtn.disabled = false;
                 
+                const deviceType = isMobile ? 'mobile' : 'desktop';
                 document.getElementById('photoStatus').innerHTML = 
-                    '<span class="text-green-600">✅ Kamera berhasil diaktifkan. Posisikan wajah Anda dan klik "Ambil Foto"</span>';
+                    `<span class="text-green-600">✅ Kamera berhasil diaktifkan (${deviceType}). Posisikan wajah Anda dan klik "Ambil Foto"</span>`;
                 
             } catch (error) {
                 console.error('Error accessing camera:', error);
@@ -491,18 +589,34 @@
                 
                 // Tampilkan pesan error yang lebih informatif
                 let errorMessage = '';
+                const isMobile = isMobileDevice();
+                
                 if (error.name === 'NotAllowedError' || error.name === 'PermissionDeniedError') {
-                    errorMessage = '❌ Izin kamera ditolak. Silakan izinkan akses kamera di browser dan coba lagi.';
+                    if (isMobile) {
+                        errorMessage = '❌ Izin kamera ditolak. Di HP: Buka Settings browser → Site Settings → Camera → Allow. Lalu refresh halaman.';
+                    } else {
+                        errorMessage = '❌ Izin kamera ditolak. Klik ikon kamera di address bar dan pilih "Allow", lalu refresh halaman.';
+                    }
                 } else if (error.name === 'NotFoundError' || error.name === 'DevicesNotFoundError') {
-                    errorMessage = '❌ Kamera tidak ditemukan. Pastikan perangkat memiliki kamera.';
+                    errorMessage = '❌ Kamera tidak ditemukan. Pastikan perangkat memiliki kamera dan tidak diblokir.';
                 } else if (error.name === 'NotReadableError' || error.name === 'TrackStartError') {
-                    errorMessage = '❌ Kamera sedang digunakan aplikasi lain. Tutup aplikasi lain dan coba lagi.';
+                    if (isMobile) {
+                        errorMessage = '❌ Kamera sedang digunakan aplikasi lain. Tutup semua aplikasi kamera dan refresh halaman.';
+                    } else {
+                        errorMessage = '❌ Kamera sedang digunakan aplikasi lain. Tutup aplikasi lain dan coba lagi.';
+                    }
                 } else if (error.name === 'OverconstrainedError' || error.name === 'ConstraintNotSatisfiedError') {
-                    errorMessage = '❌ Kamera tidak mendukung konfigurasi yang diminta.';
+                    errorMessage = '❌ Kamera tidak mendukung konfigurasi yang diminta. Coba gunakan browser lain.';
                 } else if (error.message.includes('Browser tidak mendukung')) {
-                    errorMessage = '❌ Browser tidak mendukung akses kamera. Gunakan browser modern seperti Chrome, Firefox, atau Safari.';
+                    if (isMobile) {
+                        errorMessage = '❌ Browser tidak mendukung kamera. Gunakan Chrome, Firefox, atau Safari terbaru.';
+                    } else {
+                        errorMessage = '❌ Browser tidak mendukung akses kamera. Gunakan browser modern seperti Chrome, Firefox, atau Safari.';
+                    }
+                } else if (error.message.includes('Timeout')) {
+                    errorMessage = '❌ Kamera terlalu lama loading. Coba refresh halaman atau restart browser.';
                 } else {
-                    errorMessage = `❌ Gagal mengakses kamera: ${error.message}`;
+                    errorMessage = `❌ Gagal mengakses kamera: ${error.message}. Coba refresh halaman.`;
                 }
                 
                 document.getElementById('photoStatus').innerHTML = 
@@ -678,53 +792,63 @@
         
         // Kirim data ke Google Sheets
         async function submitToGoogleSheets(data) {
-            // URL Web App Google Apps Script
-            const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzJeBD9CJ0w0zdqAbVVW4R7Oo3DyNme0iqjSSQsy715JUDqNpDN9bF2TQHGvKvWTPAg/exec';
+            // URL Web App Google Apps Script - GANTI DENGAN URL ANDA
+            const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxvqIt1Ds-iI1iPposxkuqC2c_IDX6gaZYb44lS6dLkVirCyJaIKMvrMotAIgIp2ZUQ/exec';
             
             try {
-                // Kirim sebagai URL-encoded form data
-                const params = new URLSearchParams();
-                params.append('nikPemohon', data.nikPemohon);
-                params.append('namaPemohon', data.namaPemohon);
-                params.append('tanggalPermohonan', data.tanggalPermohonan);
-                params.append('jenisPermohonan', data.jenisPermohonan);
-                params.append('bermohonAtasNama', data.bermohonAtasNama);
-                params.append('tempatLahir', data.tempatLahir);
-                params.append('tanggalLahir', data.tanggalLahir);
-                params.append('jenisKelamin', data.jenisKelamin);
-                params.append('statusPerkawinan', data.statusPerkawinan);
-                params.append('namaIbu', data.namaIbu);
-                params.append('namaAyah', data.namaAyah);
-                params.append('kecamatan', data.kecamatan);
-                params.append('desa', data.desa);
-                params.append('rtRw', data.rtRw);
-                params.append('fileName', data.fileName);
-                params.append('fileSize', data.fileSize);
-                params.append('filePDF', data.filePDF);
-                params.append('fotoBiometrik', data.fotoBiometrik);
-                params.append('timestamp', data.timestamp);
+                // Kirim sebagai FormData untuk kompatibilitas yang lebih baik
+                const formData = new FormData();
+                formData.append('nikPemohon', data.nikPemohon || '');
+                formData.append('namaPemohon', data.namaPemohon || '');
+                formData.append('tanggalPermohonan', data.tanggalPermohonan || '');
+                formData.append('jenisPermohonan', data.jenisPermohonan || '');
+                formData.append('bermohonAtasNama', data.bermohonAtasNama || '');
+                formData.append('tempatLahir', data.tempatLahir || '');
+                formData.append('tanggalLahir', data.tanggalLahir || '');
+                formData.append('jenisKelamin', data.jenisKelamin || '');
+                formData.append('statusPerkawinan', data.statusPerkawinan || '');
+                formData.append('namaIbu', data.namaIbu || '');
+                formData.append('namaAyah', data.namaAyah || '');
+                formData.append('kecamatan', data.kecamatan || '');
+                formData.append('desa', data.desa || '');
+                formData.append('rtRw', data.rtRw || '');
+                formData.append('fileName', data.fileName || '');
+                formData.append('fileSize', data.fileSize || '');
+                formData.append('filePDF', data.filePDF || '');
+                formData.append('fotoBiometrik', data.fotoBiometrik || '');
+                formData.append('timestamp', data.timestamp || new Date().toISOString());
                 
                 const response = await fetch(GOOGLE_APPS_SCRIPT_URL, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                    },
-                    body: params.toString()
+                    body: formData
                 });
                 
-                // Coba baca response jika memungkinkan
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const result = await response.text();
+                console.log('Response:', result);
+                
+                // Coba parse sebagai JSON jika memungkinkan
                 try {
-                    const result = await response.text();
-                    console.log('Response:', result);
-                    return { success: true, response: result };
-                } catch (e) {
-                    // Jika tidak bisa baca response, anggap berhasil
-                    return { success: true };
+                    const jsonResult = JSON.parse(result);
+                    if (jsonResult.success === false) {
+                        throw new Error(jsonResult.error || 'Server mengembalikan error');
+                    }
+                    return jsonResult;
+                } catch (parseError) {
+                    // Jika tidak bisa parse JSON, anggap berhasil jika response ada
+                    if (result && result.length > 0) {
+                        return { success: true, response: result };
+                    } else {
+                        throw new Error('Response kosong dari server');
+                    }
                 }
                 
             } catch (error) {
                 console.error('Error:', error);
-                throw new Error('Gagal mengirim data ke server');
+                throw new Error(`Gagal mengirim data: ${error.message}`);
             }
         }
         
@@ -766,5 +890,5 @@
         // Initialize
         generateCaptcha();
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'986057db166bf44c',t:'MTc1OTAzMjEyNC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98618951664f601d',t:'MTc1OTA0NDYzNi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
