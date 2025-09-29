@@ -3,157 +3,146 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Formulir Permohonan Dokumen Kependudukan</title>
+    <title>Formulir Pengajuan Dokumen Kependudukan</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body {
             box-sizing: border-box;
         }
+        .captcha-box {
+            background: linear-gradient(45deg, #f8fafc, #e2e8f0);
+            border: 2px dashed #94a3b8;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            letter-spacing: 3px;
+            text-decoration: line-through;
+            color: #475569;
+        }
+        .form-section {
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            border: 1px solid #e2e8f0;
+        }
+        .input-focus {
+            transition: all 0.3s ease;
+        }
+        .input-focus:focus {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+        }
         .gradient-bg {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         }
-        .glass-effect {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-        .captcha-box {
-            background: #f8f9fa;
-            border: 2px dashed #dee2e6;
-            min-height: 80px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-family: 'Courier New', monospace;
-            font-size: 24px;
-            font-weight: bold;
-            letter-spacing: 3px;
-            color: #495057;
-        }
-        .camera-preview {
-            width: 200px;
-            height: 150px;
-            background: #f8f9fa;
-            border: 2px dashed #dee2e6;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 8px;
-        }
     </style>
 </head>
-<body class="gradient-bg min-h-screen py-8">
-    <div class="container mx-auto px-4 max-w-4xl">
+<body class="bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 min-h-screen py-6 lg:py-8">
+    <div class="max-w-4xl mx-auto px-4">
         <!-- Header -->
-        <div class="text-center mb-8">
-            <h1 class="text-3xl font-bold text-white mb-2">Formulir Permohonan</h1>
-            <p class="text-blue-100">Dokumen Kependudukan Online</p>
+        <div class="form-section rounded-2xl shadow-xl p-6 lg:p-8 mb-6 lg:mb-8">
+            <div class="text-center">
+                <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full mb-4">
+                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                </div>
+                <h1 class="text-2xl lg:text-3xl font-bold bg-gradient-to-r from-slate-700 to-slate-900 bg-clip-text text-transparent mb-3">
+                    Formulir Pengajuan Dokumen Kependudukan
+                </h1>
+                <p class="text-slate-600 text-sm lg:text-base">Silakan lengkapi semua data dengan benar dan akurat</p>
+            </div>
         </div>
 
-        <!-- Form Container -->
-        <div class="glass-effect rounded-2xl shadow-2xl p-8">
-            <form id="applicationForm" class="space-y-6">
-                <!-- Tanggal Permohonan -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">
-                            📅 Tanggal Permohonan
-                        </label>
-                        <input type="date" id="tanggalPermohonan" required
-                               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                    </div>
-
-                    <!-- Jenis Permohonan -->
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">
-                            📋 Jenis Permohonan
-                        </label>
-                        <select id="jenisPermohonan" required
-                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                            <option value="">Pilih Jenis Permohonan</option>
-                            <option value="Kartu Keluarga">Kartu Keluarga</option>
-                            <option value="KTP El">KTP Elektronik</option>
-                            <option value="Kartu Identitas Anak">Kartu Identitas Anak</option>
-                            <option value="SKPWNI">SKPWNI</option>
-                            <option value="SKDWNI">SKDWNI</option>
-                            <option value="Akta Kelahiran">Akta Kelahiran</option>
-                            <option value="Akta Kematian">Akta Kematian</option>
-                            <option value="Akta Perkawinan">Akta Perkawinan</option>
-                        </select>
-                    </div>
+        <!-- Form -->
+        <form id="documentForm" class="form-section rounded-2xl shadow-xl p-6 lg:p-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                
+                <!-- Tanggal Pengajuan -->
+                <div class="md:col-span-2">
+                    <label class="block text-sm font-medium text-slate-700 mb-2">Tanggal Pengajuan</label>
+                    <input type="date" id="tanggalPengajuan" required 
+                           class="input-focus w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-400 focus:border-transparent bg-white/70 backdrop-blur-sm">
                 </div>
 
-                <!-- NIK dan Nama Pemohon -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">
-                            🆔 NIK Pemohon
-                        </label>
-                        <input type="text" id="nikPemohon" required maxlength="16" pattern="[0-9]{16}"
-                               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                               placeholder="16 digit NIK">
-                    </div>
+                <!-- Jenis Permohonan -->
+                <div class="md:col-span-2">
+                    <label class="block text-sm font-medium text-slate-700 mb-2">Jenis Permohonan</label>
+                    <select id="jenisPermohonan" required 
+                            class="input-focus w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-400 focus:border-transparent bg-white/70 backdrop-blur-sm">
+                        <option value="">Pilih Jenis Permohonan</option>
+                        <option value="Kartu Keluarga">Kartu Keluarga</option>
+                        <option value="KTP El">KTP El</option>
+                        <option value="Kartu Identitas Anak">Kartu Identitas Anak</option>
+                        <option value="SKPWNI">SKPWNI</option>
+                        <option value="SKDWNI">SKDWNI</option>
+                        <option value="Akta Kelahiran">Akta Kelahiran</option>
+                        <option value="Akta Kematian">Akta Kematian</option>
+                        <option value="Akta Perkawinan">Akta Perkawinan</option>
+                    </select>
+                </div>
 
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">
-                            👤 Nama Lengkap Pemohon
-                        </label>
-                        <input type="text" id="namaPemohon" required
-                               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                               placeholder="Nama lengkap sesuai KTP">
-                    </div>
+                <!-- NIK Pemohon -->
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-2">NIK Pemohon</label>
+                    <input type="text" id="nikPemohon" required maxlength="16" pattern="[0-9]{16}"
+                           class="input-focus w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-400 focus:border-transparent bg-white/70 backdrop-blur-sm"
+                           placeholder="16 digit NIK">
+                </div>
+
+                <!-- No HP Pemohon -->
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-2">No HP Pemohon</label>
+                    <input type="tel" id="noHpPemohon" required 
+                           class="input-focus w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-400 focus:border-transparent bg-white/70 backdrop-blur-sm"
+                           placeholder="08xxxxxxxxxx">
+                </div>
+
+                <!-- Email Pemohon -->
+                <div class="md:col-span-2">
+                    <label class="block text-sm font-medium text-slate-700 mb-2">Email Pemohon</label>
+                    <input type="email" id="emailPemohon" required 
+                           class="input-focus w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-400 focus:border-transparent bg-white/70 backdrop-blur-sm"
+                           placeholder="email@example.com">
                 </div>
 
                 <!-- Bermohon Atas Nama -->
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">
-                        👥 Bermohon Atas Nama
-                    </label>
-                    <input type="text" id="bermohonAtasNama" required
-                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                           placeholder="Nama Lengkap/Bayi/Anak/Jenazah">
+                <div class="md:col-span-2">
+                    <label class="block text-sm font-medium text-slate-700 mb-2">Bermohon Atas Nama</label>
+                    <input type="text" id="bermohonAtasNama" required 
+                           class="input-focus w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-400 focus:border-transparent bg-white/70 backdrop-blur-sm"
+                           placeholder="Nama lengkap sesuai dokumen">
                 </div>
 
-                <!-- Tempat dan Tanggal Lahir -->
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">
-                            🏙️ Tempat Lahir
-                        </label>
-                        <input type="text" id="tempatLahir" required
-                               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                               placeholder="Kota/Kabupaten">
-                    </div>
+                <!-- Tempat Lahir -->
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-2">Tempat Lahir</label>
+                    <input type="text" id="tempatLahir" required 
+                           class="input-focus w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-400 focus:border-transparent bg-white/70 backdrop-blur-sm"
+                           placeholder="Kota/Kabupaten">
+                </div>
 
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">
-                            📅 Tanggal Lahir
-                        </label>
-                        <input type="date" id="tanggalLahir" required
-                               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                    </div>
+                <!-- Tanggal Lahir -->
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-2">Tanggal Lahir</label>
+                    <input type="date" id="tanggalLahir" required 
+                           class="input-focus w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-400 focus:border-transparent bg-white/70 backdrop-blur-sm">
+                </div>
 
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">
-                            ⚧️ Jenis Kelamin
-                        </label>
-                        <select id="jenisKelamin" required
-                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                            <option value="">Pilih</option>
-                            <option value="Laki-laki">Laki-laki</option>
-                            <option value="Perempuan">Perempuan</option>
-                        </select>
-                    </div>
+                <!-- Jenis Kelamin -->
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-2">Jenis Kelamin</label>
+                    <select id="jenisKelamin" required 
+                            class="input-focus w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-400 focus:border-transparent bg-white/70 backdrop-blur-sm">
+                        <option value="">Pilih Jenis Kelamin</option>
+                        <option value="Laki-laki">Laki-laki</option>
+                        <option value="Perempuan">Perempuan</option>
+                    </select>
                 </div>
 
                 <!-- Status Perkawinan -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">
-                        💍 Status Perkawinan
-                    </label>
-                    <select id="statusPerkawinan" required
-                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                        <option value="">Pilih Status</option>
+                    <label class="block text-sm font-medium text-slate-700 mb-2">Status Perkawinan</label>
+                    <select id="statusPerkawinan" required 
+                            class="input-focus w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-400 focus:border-transparent bg-white/70 backdrop-blur-sm">
+                        <option value="">Pilih Status Perkawinan</option>
                         <option value="Belum Kawin">Belum Kawin</option>
                         <option value="Kawin">Kawin</option>
                         <option value="Cerai Mati">Cerai Mati</option>
@@ -161,178 +150,139 @@
                     </select>
                 </div>
 
-                <!-- Nama Orang Tua -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">
-                            👩 Nama Lengkap Ibu
-                        </label>
-                        <input type="text" id="namaIbu" required
-                               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                               placeholder="Nama lengkap ibu kandung">
-                    </div>
-
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">
-                            👨 Nama Lengkap Ayah <span class="text-gray-500">(Opsional)</span>
-                        </label>
-                        <input type="text" id="namaAyah"
-                               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                               placeholder="Nama lengkap ayah kandung">
-                    </div>
-                </div>
-
-                <!-- Alamat -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">
-                            🏛️ Kecamatan
-                        </label>
-                        <select id="kecamatan" required onchange="updateDesa()"
-                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                            <option value="">Pilih Kecamatan</option>
-                            <option value="Tanimbar Selatan">Tanimbar Selatan</option>
-                            <option value="Selaru">Selaru</option>
-                            <option value="Wertamrian">Wertamrian</option>
-                            <option value="Wermaktian">Wermaktian</option>
-                            <option value="Tanimbar Utara">Tanimbar Utara</option>
-                            <option value="Fordata">Fordata</option>
-                            <option value="Wuarlabobar">Wuarlabobar</option>
-                            <option value="Kormomolin">Kormomolin</option>
-                            <option value="Nirunmas">Nirunmas</option>
-                            <option value="Molumaru">Molumaru</option>
-                        </select>
-                    </div>
-
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">
-                            🏘️ Desa/Kelurahan
-                        </label>
-                        <select id="desa" required
-                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                            <option value="">Pilih Desa/Kelurahan</option>
-                        </select>
-                    </div>
-                </div>
-
+                <!-- Nama Ibu -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">
-                        🏠 RT/RW
-                    </label>
-                    <input type="text" id="rtRw" required
-                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    <label class="block text-sm font-medium text-slate-700 mb-2">Nama Ibu</label>
+                    <input type="text" id="namaIbu" required 
+                           class="input-focus w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-400 focus:border-transparent bg-white/70 backdrop-blur-sm"
+                           placeholder="Nama lengkap ibu kandung">
+                </div>
+
+                <!-- Nama Ayah -->
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-2">Nama Ayah</label>
+                    <input type="text" id="namaAyah" required 
+                           class="input-focus w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-400 focus:border-transparent bg-white/70 backdrop-blur-sm"
+                           placeholder="Nama lengkap ayah kandung">
+                </div>
+
+                <!-- Kecamatan -->
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-2">Kecamatan</label>
+                    <select id="kecamatan" required 
+                            class="input-focus w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-400 focus:border-transparent bg-white/70 backdrop-blur-sm">
+                        <option value="">Pilih Kecamatan</option>
+                        <option value="Tanimbar Selatan">Tanimbar Selatan</option>
+                        <option value="Selaru">Selaru</option>
+                        <option value="Wertamrian">Wertamrian</option>
+                        <option value="Wermaktian">Wermaktian</option>
+                        <option value="Tanimbar Utara">Tanimbar Utara</option>
+                        <option value="Fordata">Fordata</option>
+                        <option value="Wuarlabobar">Wuarlabobar</option>
+                        <option value="Kormomolin">Kormomolin</option>
+                        <option value="Nirunmas">Nirunmas</option>
+                        <option value="Molumaru">Molumaru</option>
+                    </select>
+                </div>
+
+                <!-- Desa/Kelurahan -->
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-2">Desa/Kelurahan</label>
+                    <select id="desaKelurahan" required 
+                            class="input-focus w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-400 focus:border-transparent bg-white/70 backdrop-blur-sm">
+                        <option value="">Pilih Desa/Kelurahan</option>
+                    </select>
+                </div>
+
+                <!-- RT/RW -->
+                <div class="md:col-span-2">
+                    <label class="block text-sm font-medium text-slate-700 mb-2">RT/RW</label>
+                    <input type="text" id="rtRw" required 
+                           class="input-focus w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-400 focus:border-transparent bg-white/70 backdrop-blur-sm"
                            placeholder="Contoh: 001/002">
                 </div>
 
-                <!-- Upload File -->
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">
-                        📎 Upload File Pendukung (PDF) - Wajib
-                    </label>
-                    <input type="file" id="filePendukung" accept=".pdf" required onchange="validatePDFFile()"
-                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                    <div class="mt-2 space-y-1">
-                        <p class="text-sm text-gray-500">• File harus dalam format PDF</p>
-                        <p class="text-sm text-gray-500">• Ukuran maksimal 5MB</p>
-                        <p class="text-sm text-gray-500">• File akan dikonversi ke Base64 untuk dikirim</p>
-                    </div>
-                    <div id="fileStatus" class="mt-2 text-sm"></div>
-                </div>
-
-                <!-- Verifikasi Biometrik -->
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">
-                        📸 Verifikasi Biometrik (Wajib)
-                    </label>
-                    <div class="flex flex-col items-center space-y-4">
-                        <video id="cameraVideo" width="300" height="225" autoplay style="display: none;" class="border-2 border-gray-300 rounded-lg"></video>
-                        <div class="camera-preview" id="cameraPreview">
-                            <span class="text-gray-500">📷 Klik "Aktifkan Kamera" untuk mulai</span>
-                        </div>
-                        <canvas id="photoCanvas" width="300" height="225" style="display: none;"></canvas>
-                        
-                        <div class="flex space-x-3">
-                            <button type="button" id="startCameraBtn" onclick="startCamera()"
-                                    class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
-                                📹 Aktifkan Kamera
-                            </button>
-                            <button type="button" id="captureBtn" onclick="capturePhoto()" disabled
-                                    class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:bg-gray-400">
-                                📸 Ambil Foto
-                            </button>
-                            <button type="button" id="retakeBtn" onclick="retakePhoto()" style="display: none;"
-                                    class="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors">
-                                🔄 Foto Ulang
-                            </button>
-                        </div>
-                        
-                        <div id="photoStatus" class="text-sm text-gray-600"></div>
+                <!-- Upload File Pendukung -->
+                <div class="md:col-span-2">
+                    <label class="block text-sm font-medium text-slate-700 mb-2">Upload File Pendukung</label>
+                    <div class="border-2 border-dashed border-slate-300 rounded-xl p-6 text-center hover:border-blue-400 transition-all duration-300 bg-white/50 backdrop-blur-sm">
+                        <input type="file" id="filePendukung" multiple accept=".pdf,.jpg,.jpeg,.png" 
+                               class="hidden" onchange="updateFileList()">
+                        <label for="filePendukung" class="cursor-pointer">
+                            <div class="text-slate-600">
+                                <svg class="mx-auto h-12 w-12 text-slate-400 mb-4" stroke="currentColor" fill="none" viewBox="0 0 48 48">
+                                    <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                </svg>
+                                <p class="text-sm font-medium">Klik untuk upload file atau drag & drop</p>
+                                <p class="text-xs text-slate-500 mt-1">PDF, JPG, PNG (Max 5MB per file)</p>
+                            </div>
+                        </label>
+                        <div id="fileList" class="mt-4 text-left"></div>
                     </div>
                 </div>
 
-                <!-- CAPTCHA -->
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">
-                        🔒 Verifikasi CAPTCHA
-                    </label>
-                    <div class="flex items-center space-x-4">
-                        <div class="captcha-box rounded-lg" id="captchaDisplay">
-                            <span id="captchaText">LOADING...</span>
-                        </div>
-                        <button type="button" onclick="generateCaptcha()"
-                                class="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors">
-                            🔄 Refresh
+                <!-- Captcha -->
+                <div class="md:col-span-2">
+                    <label class="block text-sm font-medium text-slate-700 mb-2">Captcha</label>
+                    <div class="flex flex-col sm:flex-row items-start sm:items-center space-y-3 sm:space-y-0 sm:space-x-4">
+                        <div class="captcha-box px-4 py-3 rounded-xl text-xl flex-shrink-0" id="captchaDisplay"></div>
+                        <button type="button" onclick="generateCaptcha()" 
+                                class="px-4 py-2 bg-slate-500 text-white rounded-xl hover:bg-slate-600 transition-all duration-200 transform hover:scale-105 flex items-center space-x-2">
+                            <span>🔄</span>
+                            <span>Refresh</span>
                         </button>
                     </div>
-                    <input type="text" id="captchaInput" required
-                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent mt-2"
-                           placeholder="Masukkan kode CAPTCHA">
+                    <input type="text" id="captchaInput" required 
+                           class="input-focus w-full mt-3 px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-400 focus:border-transparent bg-white/70 backdrop-blur-sm"
+                           placeholder="Masukkan kode captcha">
                 </div>
 
                 <!-- Syarat dan Ketentuan -->
-                <div class="bg-gray-50 p-4 rounded-lg">
-                    <label class="flex items-start space-x-3">
-                        <input type="checkbox" id="agreement" required
-                               class="mt-1 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
-                        <span class="text-sm text-gray-700">
-                            Saya menyetujui <strong>Syarat dan Ketentuan</strong> yang berlaku dan menyatakan bahwa data yang saya berikan adalah benar dan dapat dipertanggungjawabkan secara hukum.
-                        </span>
-                    </label>
+                <div class="md:col-span-2">
+                    <div class="flex items-start space-x-3 p-4 bg-blue-50/50 rounded-xl border border-blue-200">
+                        <input type="checkbox" id="syaratKetentuan" required 
+                               class="mt-1 h-4 w-4 text-blue-600 focus:ring-blue-500 border-slate-300 rounded">
+                        <label for="syaratKetentuan" class="text-sm text-slate-700 leading-relaxed">
+                            Saya menyetujui <a href="#" class="text-blue-600 hover:underline font-medium">syarat dan ketentuan</a> 
+                            yang berlaku dan menyatakan bahwa data yang saya berikan adalah benar dan dapat dipertanggungjawabkan.
+                        </label>
+                    </div>
                 </div>
-
-                <!-- Submit Button -->
-                <div class="text-center pt-6">
-                    <button type="submit" id="submitBtn"
-                            class="w-full md:w-auto px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-lg hover:from-blue-700 hover:to-purple-700 transform hover:scale-105 transition-all duration-200 shadow-lg">
-                        📤 Kirim Permohonan
-                    </button>
-                </div>
-            </form>
-        </div>
-
-        <!-- Loading Modal -->
-        <div id="loadingModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
-            <div class="bg-white rounded-lg p-8 text-center">
-                <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-                <p class="text-gray-700">Mengirim permohonan...</p>
             </div>
-        </div>
 
-        <!-- Success Modal -->
-        <div id="successModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
-            <div class="bg-white rounded-lg p-8 text-center max-w-md mx-4">
-                <div class="text-green-600 text-6xl mb-4">✅</div>
-                <h3 class="text-xl font-bold text-gray-800 mb-2">Permohonan Berhasil Dikirim!</h3>
-                <p class="text-gray-600 mb-4">Data Anda telah tersimpan dan akan diproses segera.</p>
-                <button onclick="closeSuccessModal()" 
-                        class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
-                    Tutup
+            <!-- Submit Button -->
+            <div class="mt-8 text-center">
+                <button type="submit" 
+                        class="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold py-4 px-8 rounded-xl shadow-xl transform hover:scale-105 transition-all duration-300 hover:shadow-2xl flex items-center space-x-3 mx-auto">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+                    </svg>
+                    <span>Kirim Pengajuan</span>
                 </button>
+            </div>
+        </form>
+
+        <!-- Success Message -->
+        <div id="successMessage" class="hidden form-section border border-green-300 text-green-800 px-6 py-6 rounded-2xl mt-6 shadow-xl">
+            <div class="flex items-center">
+                <div class="flex-shrink-0">
+                    <div class="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center">
+                        <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                        </svg>
+                    </div>
+                </div>
+                <div class="ml-4">
+                    <h3 class="font-semibold text-lg">Pengajuan Berhasil Dikirim!</h3>
+                    <p class="text-green-700 text-sm mt-1">Data Anda telah tersimpan dalam sistem dan akan diproses segera.</p>
+                </div>
             </div>
         </div>
     </div>
 
     <script>
+        let captchaCode = '';
+
         // Data desa berdasarkan kecamatan
         const desaData = {
             "Tanimbar Selatan": ["Saumlaki", "Saumlaki Utara", "Wowonda", "Ilngei", "Kabiarat", "Lauran", "Sifnana", "Olilit Raya", "Lermatang", "Latdalam", "Bomaki", "Matakus"],
@@ -347,20 +297,18 @@
             "Molumaru": ["Wedangkou", "Adodo Molu", "Wulmasa", "Tutunametal", "Nurkat"]
         };
 
-        let currentCaptcha = '';
-        let photoTaken = false;
-        let cameraStream = null;
-        let capturedPhotoData = null;
-        let validPDFFile = null;
+        // Set tanggal pengajuan ke hari ini
+        document.getElementById('tanggalPengajuan').value = new Date().toISOString().split('T')[0];
 
-        // Set tanggal hari ini
-        document.getElementById('tanggalPermohonan').valueAsDate = new Date();
+        // Generate captcha saat halaman dimuat
+        generateCaptcha();
 
-        // Update desa berdasarkan kecamatan
-        function updateDesa() {
-            const kecamatan = document.getElementById('kecamatan').value;
-            const desaSelect = document.getElementById('desa');
+        // Update desa berdasarkan kecamatan yang dipilih
+        document.getElementById('kecamatan').addEventListener('change', function() {
+            const kecamatan = this.value;
+            const desaSelect = document.getElementById('desaKelurahan');
             
+            // Reset desa options
             desaSelect.innerHTML = '<option value="">Pilih Desa/Kelurahan</option>';
             
             if (kecamatan && desaData[kecamatan]) {
@@ -371,391 +319,58 @@
                     desaSelect.appendChild(option);
                 });
             }
-        }
+        });
 
-        // Generate CAPTCHA
         function generateCaptcha() {
             const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-            let captcha = '';
+            captchaCode = '';
             for (let i = 0; i < 6; i++) {
-                captcha += chars.charAt(Math.floor(Math.random() * chars.length));
+                captchaCode += chars.charAt(Math.floor(Math.random() * chars.length));
             }
-            currentCaptcha = captcha;
-            document.getElementById('captchaText').textContent = captcha;
+            document.getElementById('captchaDisplay').textContent = captchaCode;
         }
 
-        // Deteksi apakah perangkat mobile
-        function isMobileDevice() {
-            return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
-                   (navigator.maxTouchPoints && navigator.maxTouchPoints > 2 && /MacIntel/.test(navigator.platform));
-        }
-
-        // Aktifkan kamera
-        async function startCamera() {
-            const video = document.getElementById('cameraVideo');
-            const preview = document.getElementById('cameraPreview');
-            const startBtn = document.getElementById('startCameraBtn');
-            const captureBtn = document.getElementById('captureBtn');
-            
-            try {
-                // Update status loading
-                startBtn.disabled = true;
-                startBtn.textContent = '⏳ Mengaktifkan...';
-                document.getElementById('photoStatus').innerHTML = 
-                    '<span class="text-blue-600">🔄 Meminta izin akses kamera...</span>';
-                
-                // Cek apakah browser mendukung getUserMedia
-                if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-                    throw new Error('Browser tidak mendukung akses kamera');
-                }
-
-                // Deteksi perangkat mobile
-                const isMobile = isMobileDevice();
-                console.log('Perangkat mobile:', isMobile);
-                
-                // Konfigurasi kamera yang dioptimalkan untuk mobile dan desktop
-                let constraints = [];
-                
-                if (isMobile) {
-                    // Konfigurasi khusus mobile
-                    constraints = [
-                        // Mobile: Kamera depan dengan resolusi rendah
-                        { 
-                            video: { 
-                                width: { min: 240, ideal: 320, max: 640 }, 
-                                height: { min: 180, ideal: 240, max: 480 },
-                                facingMode: 'user'
-                            } 
-                        },
-                        // Mobile: Kamera belakang dengan resolusi rendah
-                        { 
-                            video: { 
-                                width: { min: 240, ideal: 320, max: 640 }, 
-                                height: { min: 180, ideal: 240, max: 480 },
-                                facingMode: 'environment'
-                            } 
-                        },
-                        // Mobile: Tanpa facingMode, resolusi rendah
-                        { 
-                            video: { 
-                                width: { min: 240, ideal: 320, max: 640 }, 
-                                height: { min: 180, ideal: 240, max: 480 }
-                            } 
-                        },
-                        // Mobile: Konfigurasi paling sederhana
-                        { 
-                            video: { 
-                                width: { ideal: 320 }, 
-                                height: { ideal: 240 }
-                            } 
-                        },
-                        // Mobile: Fallback terakhir
-                        { video: true }
-                    ];
-                } else {
-                    // Konfigurasi desktop (seperti sebelumnya)
-                    constraints = [
-                        { 
-                            video: { 
-                                width: { ideal: 300 }, 
-                                height: { ideal: 225 },
-                                facingMode: 'user'
-                            } 
-                        },
-                        { 
-                            video: { 
-                                width: { ideal: 300 }, 
-                                height: { ideal: 225 },
-                                facingMode: 'environment'
-                            } 
-                        },
-                        { 
-                            video: { 
-                                width: { ideal: 300 }, 
-                                height: { ideal: 225 }
-                            } 
-                        },
-                        { video: true }
-                    ];
-                }
-                
-                let stream = null;
-                let lastError = null;
-                
-                // Coba setiap konfigurasi sampai berhasil
-                for (let i = 0; i < constraints.length; i++) {
-                    try {
-                        console.log(`Mencoba konfigurasi ${i + 1}/${constraints.length}:`, constraints[i]);
-                        
-                        // Update status untuk setiap percobaan
-                        document.getElementById('photoStatus').innerHTML = 
-                            `<span class="text-blue-600">🔄 Mencoba konfigurasi ${i + 1}/${constraints.length}...</span>`;
-                        
-                        stream = await navigator.mediaDevices.getUserMedia(constraints[i]);
-                        console.log('Konfigurasi berhasil:', constraints[i]);
-                        break; // Berhasil, keluar dari loop
-                    } catch (err) {
-                        console.log(`Konfigurasi ${i + 1} gagal:`, err.message);
-                        lastError = err;
-                        
-                        // Tunggu sebentar sebelum mencoba konfigurasi berikutnya
-                        if (i < constraints.length - 1) {
-                            await new Promise(resolve => setTimeout(resolve, 500));
-                        }
-                        continue;
-                    }
-                }
-                
-                if (!stream) {
-                    throw lastError || new Error('Semua konfigurasi kamera gagal');
-                }
-                
-                cameraStream = stream;
-                
-                // Set video source
-                video.srcObject = stream;
-                
-                // Untuk mobile, set atribut tambahan
-                if (isMobile) {
-                    video.setAttribute('playsinline', 'true');
-                    video.setAttribute('webkit-playsinline', 'true');
-                    video.muted = true; // Penting untuk autoplay di mobile
-                }
-                
-                // Tunggu video siap diputar dengan timeout yang lebih panjang untuk mobile
-                const timeoutDuration = isMobile ? 15000 : 10000;
-                
-                await new Promise((resolve, reject) => {
-                    const timeoutId = setTimeout(() => {
-                        reject(new Error('Timeout loading video'));
-                    }, timeoutDuration);
-                    
-                    video.onloadedmetadata = () => {
-                        clearTimeout(timeoutId);
-                        console.log('Video metadata loaded');
-                        
-                        // Untuk mobile, coba play dengan promise
-                        const playPromise = video.play();
-                        
-                        if (playPromise !== undefined) {
-                            playPromise
-                                .then(() => {
-                                    console.log('Video playing successfully');
-                                    resolve();
-                                })
-                                .catch((err) => {
-                                    console.log('Play error:', err);
-                                    // Coba lagi tanpa autoplay
-                                    video.autoplay = false;
-                                    setTimeout(() => {
-                                        video.play().then(resolve).catch(reject);
-                                    }, 100);
-                                });
-                        } else {
-                            resolve();
-                        }
-                    };
-                    
-                    video.onerror = (err) => {
-                        clearTimeout(timeoutId);
-                        reject(err);
-                    };
-                    
-                    // Trigger loading jika belum dimulai
-                    if (video.readyState === 0) {
-                        video.load();
-                    }
-                });
-                
-                // Tampilkan video dan sembunyikan preview
-                video.style.display = 'block';
-                preview.style.display = 'none';
-                
-                // Update UI
-                startBtn.textContent = '📹 Kamera Aktif';
-                captureBtn.disabled = false;
-                
-                const deviceType = isMobile ? 'mobile' : 'desktop';
-                document.getElementById('photoStatus').innerHTML = 
-                    `<span class="text-green-600">✅ Kamera berhasil diaktifkan (${deviceType}). Posisikan wajah Anda dan klik "Ambil Foto"</span>`;
-                
-            } catch (error) {
-                console.error('Error accessing camera:', error);
-                
-                // Reset UI
-                startBtn.disabled = false;
-                startBtn.textContent = '📹 Aktifkan Kamera';
-                captureBtn.disabled = true;
-                
-                // Tampilkan pesan error yang lebih informatif
-                let errorMessage = '';
-                const isMobile = isMobileDevice();
-                
-                if (error.name === 'NotAllowedError' || error.name === 'PermissionDeniedError') {
-                    if (isMobile) {
-                        errorMessage = '❌ Izin kamera ditolak. Di HP: Buka Settings browser → Site Settings → Camera → Allow. Lalu refresh halaman.';
-                    } else {
-                        errorMessage = '❌ Izin kamera ditolak. Klik ikon kamera di address bar dan pilih "Allow", lalu refresh halaman.';
-                    }
-                } else if (error.name === 'NotFoundError' || error.name === 'DevicesNotFoundError') {
-                    errorMessage = '❌ Kamera tidak ditemukan. Pastikan perangkat memiliki kamera dan tidak diblokir.';
-                } else if (error.name === 'NotReadableError' || error.name === 'TrackStartError') {
-                    if (isMobile) {
-                        errorMessage = '❌ Kamera sedang digunakan aplikasi lain. Tutup semua aplikasi kamera dan refresh halaman.';
-                    } else {
-                        errorMessage = '❌ Kamera sedang digunakan aplikasi lain. Tutup aplikasi lain dan coba lagi.';
-                    }
-                } else if (error.name === 'OverconstrainedError' || error.name === 'ConstraintNotSatisfiedError') {
-                    errorMessage = '❌ Kamera tidak mendukung konfigurasi yang diminta. Coba gunakan browser lain.';
-                } else if (error.message.includes('Browser tidak mendukung')) {
-                    if (isMobile) {
-                        errorMessage = '❌ Browser tidak mendukung kamera. Gunakan Chrome, Firefox, atau Safari terbaru.';
-                    } else {
-                        errorMessage = '❌ Browser tidak mendukung akses kamera. Gunakan browser modern seperti Chrome, Firefox, atau Safari.';
-                    }
-                } else if (error.message.includes('Timeout')) {
-                    errorMessage = '❌ Kamera terlalu lama loading. Coba refresh halaman atau restart browser.';
-                } else {
-                    errorMessage = `❌ Gagal mengakses kamera: ${error.message}. Coba refresh halaman.`;
-                }
-                
-                document.getElementById('photoStatus').innerHTML = 
-                    `<span class="text-red-600">${errorMessage}</span>`;
-                
-                // Bersihkan stream jika ada
-                if (cameraStream) {
-                    cameraStream.getTracks().forEach(track => track.stop());
-                    cameraStream = null;
-                }
-            }
-        }
-
-        // Ambil foto dari kamera
-        function capturePhoto() {
-            const video = document.getElementById('cameraVideo');
-            const canvas = document.getElementById('photoCanvas');
-            const ctx = canvas.getContext('2d');
-            const preview = document.getElementById('cameraPreview');
-            
-            // Gambar frame video ke canvas
-            ctx.drawImage(video, 0, 0, 300, 225);
-            
-            // Konversi ke base64
-            capturedPhotoData = canvas.toDataURL('image/jpeg', 0.8);
-            
-            // Tampilkan hasil foto
-            canvas.style.display = 'block';
-            video.style.display = 'none';
-            
-            // Update UI
-            document.getElementById('captureBtn').style.display = 'none';
-            document.getElementById('retakeBtn').style.display = 'inline-block';
-            
-            document.getElementById('photoStatus').innerHTML = 
-                '<span class="text-green-600">✅ Foto berhasil diambil! Klik "Foto Ulang" jika ingin mengambil ulang.</span>';
-            
-            photoTaken = true;
-            
-            // Hentikan kamera
-            if (cameraStream) {
-                cameraStream.getTracks().forEach(track => track.stop());
-            }
-        }
-
-        // Foto ulang
-        function retakePhoto() {
-            const video = document.getElementById('cameraVideo');
-            const canvas = document.getElementById('photoCanvas');
-            const captureBtn = document.getElementById('captureBtn');
-            const retakeBtn = document.getElementById('retakeBtn');
-            
-            canvas.style.display = 'none';
-            captureBtn.style.display = 'inline-block';
-            captureBtn.disabled = false;
-            retakeBtn.style.display = 'none';
-            
-            capturedPhotoData = null;
-            photoTaken = false;
-            
-            // Aktifkan kamera lagi
-            startCamera();
-        }
-
-        // Validasi file PDF
-        function validatePDFFile() {
+        function updateFileList() {
             const fileInput = document.getElementById('filePendukung');
-            const fileStatus = document.getElementById('fileStatus');
+            const fileList = document.getElementById('fileList');
             
-            if (fileInput.files.length === 0) {
-                fileStatus.innerHTML = '';
-                validPDFFile = null;
-                return;
+            if (fileInput.files.length > 0) {
+                let html = '<div class="text-sm text-gray-600"><strong>File yang dipilih:</strong></div>';
+                for (let i = 0; i < fileInput.files.length; i++) {
+                    const file = fileInput.files[i];
+                    const size = (file.size / 1024 / 1024).toFixed(2);
+                    html += `<div class="flex items-center justify-between bg-gray-50 p-2 rounded mt-1">
+                        <span class="text-sm">${file.name}</span>
+                        <span class="text-xs text-gray-500">${size} MB</span>
+                    </div>`;
+                }
+                fileList.innerHTML = html;
+            } else {
+                fileList.innerHTML = '';
             }
-            
-            const file = fileInput.files[0];
-            
-            // Validasi tipe file
-            if (file.type !== 'application/pdf') {
-                fileStatus.innerHTML = '<span class="text-red-600">❌ File harus dalam format PDF!</span>';
-                fileInput.value = '';
-                validPDFFile = null;
-                return;
-            }
-            
-            // Validasi ukuran file (5MB = 5 * 1024 * 1024 bytes)
-            if (file.size > 5 * 1024 * 1024) {
-                fileStatus.innerHTML = '<span class="text-red-600">❌ Ukuran file maksimal 5MB!</span>';
-                fileInput.value = '';
-                validPDFFile = null;
-                return;
-            }
-            
-            // File valid
-            validPDFFile = file;
-            const fileSizeKB = Math.round(file.size / 1024);
-            fileStatus.innerHTML = `<span class="text-green-600">✅ File PDF valid (${fileSizeKB} KB)</span>`;
-            
-            // Konversi ke Base64 untuk dikirim
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                validPDFFile.base64Data = e.target.result;
-            };
-            reader.readAsDataURL(file);
         }
 
-        // Form submission
-        document.getElementById('applicationForm').addEventListener('submit', async function(e) {
+        // Handle form submission
+        document.getElementById('documentForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
-            // Validasi CAPTCHA
+            // Validasi captcha
             const captchaInput = document.getElementById('captchaInput').value.toUpperCase();
-            if (captchaInput !== currentCaptcha) {
-                alert('Kode CAPTCHA tidak sesuai!');
+            if (captchaInput !== captchaCode) {
+                alert('Kode captcha tidak sesuai. Silakan coba lagi.');
+                generateCaptcha();
+                document.getElementById('captchaInput').value = '';
                 return;
             }
-            
-            // Validasi foto biometrik
-            if (!photoTaken || !capturedPhotoData) {
-                alert('Silakan ambil foto wajah untuk verifikasi biometrik terlebih dahulu!');
-                return;
-            }
-            
-            // Validasi file PDF
-            if (!validPDFFile || !validPDFFile.base64Data) {
-                alert('Silakan upload file pendukung dalam format PDF!');
-                return;
-            }
-            
-            // Show loading
-            document.getElementById('loadingModal').classList.remove('hidden');
-            document.getElementById('loadingModal').classList.add('flex');
-            
-            // Collect form data
+
+            // Kumpulkan semua data form
             const formData = {
-                tanggalPermohonan: document.getElementById('tanggalPermohonan').value,
+                timestamp: new Date().toISOString(),
+                tanggalPengajuan: document.getElementById('tanggalPengajuan').value,
                 jenisPermohonan: document.getElementById('jenisPermohonan').value,
                 nikPemohon: document.getElementById('nikPemohon').value,
-                namaPemohon: document.getElementById('namaPemohon').value,
+                noHpPemohon: document.getElementById('noHpPemohon').value,
+                emailPemohon: document.getElementById('emailPemohon').value,
                 bermohonAtasNama: document.getElementById('bermohonAtasNama').value,
                 tempatLahir: document.getElementById('tempatLahir').value,
                 tanggalLahir: document.getElementById('tanggalLahir').value,
@@ -764,131 +379,79 @@
                 namaIbu: document.getElementById('namaIbu').value,
                 namaAyah: document.getElementById('namaAyah').value,
                 kecamatan: document.getElementById('kecamatan').value,
-                desa: document.getElementById('desa').value,
+                desaKelurahan: document.getElementById('desaKelurahan').value,
                 rtRw: document.getElementById('rtRw').value,
-                fileName: validPDFFile.name,
-                fileSize: validPDFFile.size,
-                filePDF: validPDFFile.base64Data, // Data PDF dalam Base64
-                fotoBiometrik: capturedPhotoData, // Data foto dalam Base64
-                timestamp: new Date().toISOString()
+                filePendukung: document.getElementById('filePendukung').files.length + ' file(s) uploaded',
+                captchaVerified: 'Yes',
+                syaratKetentuan: 'Disetujui'
             };
-            
+
             // Kirim data ke Google Sheets
-            try {
-                await submitToGoogleSheets(formData);
-                
-                // Hide loading and show success
-                document.getElementById('loadingModal').classList.add('hidden');
-                document.getElementById('loadingModal').classList.remove('flex');
-                document.getElementById('successModal').classList.remove('hidden');
-                document.getElementById('successModal').classList.add('flex');
-                
-            } catch (error) {
-                document.getElementById('loadingModal').classList.add('hidden');
-                document.getElementById('loadingModal').classList.remove('flex');
-                alert('Terjadi kesalahan saat mengirim data. Silakan coba lagi.');
-            }
+            submitToGoogleSheets(formData);
         });
-        
-        // Kirim data ke Google Sheets
-        async function submitToGoogleSheets(data) {
-            // URL Web App Google Apps Script - GANTI DENGAN URL ANDA
-            const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxvqIt1Ds-iI1iPposxkuqC2c_IDX6gaZYb44lS6dLkVirCyJaIKMvrMotAIgIp2ZUQ/exec';
+
+        // Validasi NIK hanya angka
+        document.getElementById('nikPemohon').addEventListener('input', function(e) {
+            this.value = this.value.replace(/[^0-9]/g, '');
+        });
+
+        // Validasi No HP hanya angka
+        document.getElementById('noHpPemohon').addEventListener('input', function(e) {
+            this.value = this.value.replace(/[^0-9]/g, '');
+        });
+
+        // Fungsi untuk mengirim data ke Google Sheets
+        async function submitToGoogleSheets(formData) {
+            const submitButton = document.querySelector('button[type="submit"]');
+            const originalText = submitButton.innerHTML;
             
+            // Tampilkan loading
+            submitButton.innerHTML = `
+                <svg class="animate-spin w-5 h-5" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                <span>Mengirim...</span>
+            `;
+            submitButton.disabled = true;
+
             try {
-                // Kirim sebagai FormData untuk kompatibilitas yang lebih baik
-                const formData = new FormData();
-                formData.append('nikPemohon', data.nikPemohon || '');
-                formData.append('namaPemohon', data.namaPemohon || '');
-                formData.append('tanggalPermohonan', data.tanggalPermohonan || '');
-                formData.append('jenisPermohonan', data.jenisPermohonan || '');
-                formData.append('bermohonAtasNama', data.bermohonAtasNama || '');
-                formData.append('tempatLahir', data.tempatLahir || '');
-                formData.append('tanggalLahir', data.tanggalLahir || '');
-                formData.append('jenisKelamin', data.jenisKelamin || '');
-                formData.append('statusPerkawinan', data.statusPerkawinan || '');
-                formData.append('namaIbu', data.namaIbu || '');
-                formData.append('namaAyah', data.namaAyah || '');
-                formData.append('kecamatan', data.kecamatan || '');
-                formData.append('desa', data.desa || '');
-                formData.append('rtRw', data.rtRw || '');
-                formData.append('fileName', data.fileName || '');
-                formData.append('fileSize', data.fileSize || '');
-                formData.append('filePDF', data.filePDF || '');
-                formData.append('fotoBiometrik', data.fotoBiometrik || '');
-                formData.append('timestamp', data.timestamp || new Date().toISOString());
+                // URL Google Apps Script Web App (ganti dengan URL Anda)
+                const scriptURL = 'https://script.google.com/macros/s/AKfycby32xv8ccwcTU9CKWGJCPuXDHySzxvdJWCtuK4OQ1EqldObkdkXOe2KkrOXpSG9OC8xhA/exec';
                 
-                const response = await fetch(GOOGLE_APPS_SCRIPT_URL, {
+                const response = await fetch(scriptURL, {
                     method: 'POST',
-                    body: formData
+                    mode: 'no-cors',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData)
                 });
+
+                // Karena mode no-cors, kita tidak bisa membaca response
+                // Jadi kita asumsikan berhasil setelah delay
+                await new Promise(resolve => setTimeout(resolve, 2000));
                 
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
+                // Tampilkan pesan sukses
+                document.getElementById('successMessage').classList.remove('hidden');
                 
-                const result = await response.text();
-                console.log('Response:', result);
+                // Reset form
+                document.getElementById('documentForm').reset();
+                document.getElementById('fileList').innerHTML = '';
+                generateCaptcha();
                 
-                // Coba parse sebagai JSON jika memungkinkan
-                try {
-                    const jsonResult = JSON.parse(result);
-                    if (jsonResult.success === false) {
-                        throw new Error(jsonResult.error || 'Server mengembalikan error');
-                    }
-                    return jsonResult;
-                } catch (parseError) {
-                    // Jika tidak bisa parse JSON, anggap berhasil jika response ada
-                    if (result && result.length > 0) {
-                        return { success: true, response: result };
-                    } else {
-                        throw new Error('Response kosong dari server');
-                    }
-                }
+                // Scroll ke pesan sukses
+                document.getElementById('successMessage').scrollIntoView({ behavior: 'smooth' });
                 
             } catch (error) {
                 console.error('Error:', error);
-                throw new Error(`Gagal mengirim data: ${error.message}`);
+                alert('Terjadi kesalahan saat mengirim data. Silakan coba lagi.');
+            } finally {
+                // Kembalikan tombol ke kondisi semula
+                submitButton.innerHTML = originalText;
+                submitButton.disabled = false;
             }
         }
-        
-        function closeSuccessModal() {
-            document.getElementById('successModal').classList.add('hidden');
-            document.getElementById('successModal').classList.remove('flex');
-            document.getElementById('applicationForm').reset();
-            document.getElementById('tanggalPermohonan').valueAsDate = new Date();
-            
-            // Reset kamera dan foto
-            document.getElementById('cameraPreview').innerHTML = '<span class="text-gray-500">📷 Klik "Aktifkan Kamera" untuk mulai</span>';
-            document.getElementById('cameraPreview').style.display = 'flex';
-            document.getElementById('cameraVideo').style.display = 'none';
-            document.getElementById('photoCanvas').style.display = 'none';
-            document.getElementById('startCameraBtn').disabled = false;
-            document.getElementById('startCameraBtn').textContent = '📹 Aktifkan Kamera';
-            document.getElementById('captureBtn').disabled = true;
-            document.getElementById('captureBtn').style.display = 'inline-block';
-            document.getElementById('retakeBtn').style.display = 'none';
-            document.getElementById('photoStatus').innerHTML = '';
-            
-            // Reset file
-            document.getElementById('fileStatus').innerHTML = '';
-            
-            // Reset variables
-            photoTaken = false;
-            capturedPhotoData = null;
-            validPDFFile = null;
-            
-            // Stop camera if active
-            if (cameraStream) {
-                cameraStream.getTracks().forEach(track => track.stop());
-                cameraStream = null;
-            }
-            
-            generateCaptcha();
-        }
-        
-        // Initialize
-        generateCaptcha();
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98618951664f601d',t:'MTc1OTA0NDYzNi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9867a66e171f5fc2',t:'MTc1OTEwODc0My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
