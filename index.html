@@ -9,281 +9,338 @@
         body {
             box-sizing: border-box;
         }
-        .captcha-box {
-            background: linear-gradient(45deg, #f8fafc, #e2e8f0);
-            border: 2px dashed #94a3b8;
-            font-family: 'Courier New', monospace;
-            font-weight: bold;
-            letter-spacing: 3px;
-            text-decoration: line-through;
-            color: #475569;
-        }
-        .form-section {
-            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
-            border: 1px solid #e2e8f0;
-        }
-        .input-focus {
-            transition: all 0.3s ease;
-        }
-        .input-focus:focus {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
-        }
         .gradient-bg {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         }
+        .form-shadow {
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        .input-focus:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        .captcha-box {
+            background: #f8f9fa;
+            border: 2px dashed #dee2e6;
+            font-family: 'Courier New', monospace;
+            font-size: 24px;
+            font-weight: bold;
+            letter-spacing: 3px;
+            color: #495057;
+        }
+        .file-upload-area {
+            border: 2px dashed #cbd5e0;
+            transition: all 0.3s ease;
+        }
+        .file-upload-area:hover {
+            border-color: #667eea;
+            background-color: #f7fafc;
+        }
+        .file-upload-area.dragover {
+            border-color: #667eea;
+            background-color: #edf2f7;
+        }
     </style>
 </head>
-<body class="bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 min-h-screen py-6 lg:py-8">
-    <div class="max-w-4xl mx-auto px-4">
+<body class="min-h-screen gradient-bg font-sans">
+    <div class="container mx-auto px-4 py-8">
         <!-- Header -->
-        <div class="form-section rounded-2xl shadow-xl p-6 lg:p-8 mb-6 lg:mb-8">
-            <div class="text-center">
-                <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full mb-4">
-                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                    </svg>
-                </div>
-                <h1 class="text-2xl lg:text-3xl font-bold bg-gradient-to-r from-slate-700 to-slate-900 bg-clip-text text-transparent mb-3">
-                    Formulir Pengajuan Dokumen Kependudukan
-                </h1>
-                <p class="text-slate-600 text-sm lg:text-base">Silakan lengkapi semua data dengan benar dan akurat</p>
+        <div class="text-center mb-8">
+            <div class="inline-flex items-center justify-center w-16 h-16 bg-white rounded-full mb-4 shadow-lg">
+                <svg class="w-8 h-8 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
             </div>
+            <h1 class="text-3xl font-bold text-white mb-2">Formulir Pengajuan Dokumen Kependudukan</h1>
+            <p class="text-indigo-100">Silakan lengkapi formulir di bawah ini dengan data yang benar</p>
         </div>
 
-        <!-- Form -->
-        <form id="documentForm" class="form-section rounded-2xl shadow-xl p-6 lg:p-8">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                
+        <!-- Form Container -->
+        <div class="max-w-4xl mx-auto bg-white rounded-2xl form-shadow overflow-hidden">
+            <div class="bg-gradient-to-r from-indigo-500 to-purple-600 px-8 py-6">
+                <h2 class="text-xl font-semibold text-white">Data Permohonan</h2>
+            </div>
+
+            <form id="documentForm" class="p-8 space-y-6">
                 <!-- Tanggal Pengajuan -->
-                <div class="md:col-span-2">
-                    <label class="block text-sm font-medium text-slate-700 mb-2">Tanggal Pengajuan</label>
-                    <input type="date" id="tanggalPengajuan" required 
-                           class="input-focus w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-400 focus:border-transparent bg-white/70 backdrop-blur-sm">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Tanggal Pengajuan</label>
+                        <input type="date" id="tanggalPengajuan" name="tanggalPengajuan" required
+                               class="w-full px-4 py-3 border border-gray-300 rounded-lg input-focus transition-all duration-200">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Jenis Permohonan</label>
+                        <select id="jenisPermohonan" name="jenisPermohonan" required
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg input-focus transition-all duration-200">
+                            <option value="">Pilih Jenis Permohonan</option>
+                            <option value="Kartu Keluarga">Kartu Keluarga</option>
+                            <option value="KTP El">KTP El</option>
+                            <option value="Kartu Identitas Anak">Kartu Identitas Anak</option>
+                            <option value="SKPWNI">SKPWNI</option>
+                            <option value="SKDWNI">SKDWNI</option>
+                            <option value="Akta Kelahiran">Akta Kelahiran</option>
+                            <option value="Akta Kematian">Akta Kematian</option>
+                            <option value="Akta Perkawinan">Akta Perkawinan</option>
+                        </select>
+                    </div>
                 </div>
 
-                <!-- Jenis Permohonan -->
-                <div class="md:col-span-2">
-                    <label class="block text-sm font-medium text-slate-700 mb-2">Jenis Permohonan</label>
-                    <select id="jenisPermohonan" required 
-                            class="input-focus w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-400 focus:border-transparent bg-white/70 backdrop-blur-sm">
-                        <option value="">Pilih Jenis Permohonan</option>
-                        <option value="Kartu Keluarga">Kartu Keluarga</option>
-                        <option value="KTP El">KTP El</option>
-                        <option value="Kartu Identitas Anak">Kartu Identitas Anak</option>
-                        <option value="SKPWNI">SKPWNI</option>
-                        <option value="SKDWNI">SKDWNI</option>
-                        <option value="Akta Kelahiran">Akta Kelahiran</option>
-                        <option value="Akta Kematian">Akta Kematian</option>
-                        <option value="Akta Perkawinan">Akta Perkawinan</option>
-                    </select>
+                <!-- Data Pemohon -->
+                <div class="border-t pt-6">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                        <svg class="w-5 h-5 mr-2 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                        </svg>
+                        Data Pemohon
+                    </h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">NIK Pemohon</label>
+                            <input type="text" id="nikPemohon" name="nikPemohon" required maxlength="16" pattern="[0-9]{16}"
+                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg input-focus transition-all duration-200"
+                                   placeholder="Masukkan 16 digit NIK">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">No HP Pemohon</label>
+                            <input type="tel" id="noHpPemohon" name="noHpPemohon" required
+                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg input-focus transition-all duration-200"
+                                   placeholder="08xxxxxxxxxx">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Email Pemohon</label>
+                            <input type="email" id="emailPemohon" name="emailPemohon" required
+                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg input-focus transition-all duration-200"
+                                   placeholder="email@example.com">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Bermohon Atas Nama</label>
+                            <input type="text" id="bermohonAtasNama" name="bermohonAtasNama" required
+                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg input-focus transition-all duration-200"
+                                   placeholder="Nama lengkap">
+                        </div>
+                    </div>
                 </div>
 
-                <!-- NIK Pemohon -->
-                <div>
-                    <label class="block text-sm font-medium text-slate-700 mb-2">NIK Pemohon</label>
-                    <input type="text" id="nikPemohon" required maxlength="16" pattern="[0-9]{16}"
-                           class="input-focus w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-400 focus:border-transparent bg-white/70 backdrop-blur-sm"
-                           placeholder="16 digit NIK">
+                <!-- Data Pribadi -->
+                <div class="border-t pt-6">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                        <svg class="w-5 h-5 mr-2 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                        Data Pribadi
+                    </h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Tempat Lahir</label>
+                            <input type="text" id="tempatLahir" name="tempatLahir" required
+                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg input-focus transition-all duration-200">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Tanggal Lahir</label>
+                            <input type="date" id="tanggalLahir" name="tanggalLahir" required
+                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg input-focus transition-all duration-200">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Jenis Kelamin</label>
+                            <select id="jenisKelamin" name="jenisKelamin" required
+                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg input-focus transition-all duration-200">
+                                <option value="">Pilih Jenis Kelamin</option>
+                                <option value="Laki-laki">Laki-laki</option>
+                                <option value="Perempuan">Perempuan</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Status Perkawinan</label>
+                            <select id="statusPerkawinan" name="statusPerkawinan" required
+                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg input-focus transition-all duration-200">
+                                <option value="">Pilih Status Perkawinan</option>
+                                <option value="Belum Kawin">Belum Kawin</option>
+                                <option value="Kawin">Kawin</option>
+                                <option value="Cerai Mati">Cerai Mati</option>
+                                <option value="Cerai Hidup">Cerai Hidup</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Nama Ibu</label>
+                            <input type="text" id="namaIbu" name="namaIbu" required
+                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg input-focus transition-all duration-200">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Nama Ayah</label>
+                            <input type="text" id="namaAyah" name="namaAyah" required
+                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg input-focus transition-all duration-200">
+                        </div>
+                    </div>
                 </div>
 
-                <!-- No HP Pemohon -->
-                <div>
-                    <label class="block text-sm font-medium text-slate-700 mb-2">No HP Pemohon</label>
-                    <input type="tel" id="noHpPemohon" required 
-                           class="input-focus w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-400 focus:border-transparent bg-white/70 backdrop-blur-sm"
-                           placeholder="08xxxxxxxxxx">
+                <!-- Alamat -->
+                <div class="border-t pt-6">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                        <svg class="w-5 h-5 mr-2 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        </svg>
+                        Alamat
+                    </h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Kecamatan</label>
+                            <select id="kecamatan" name="kecamatan" required
+                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg input-focus transition-all duration-200">
+                                <option value="">Pilih Kecamatan</option>
+                                <option value="Tanimbar Selatan">Tanimbar Selatan</option>
+                                <option value="Selaru">Selaru</option>
+                                <option value="Wertamrian">Wertamrian</option>
+                                <option value="Wermaktian">Wermaktian</option>
+                                <option value="Tanimbar Utara">Tanimbar Utara</option>
+                                <option value="Fordata">Fordata</option>
+                                <option value="Wuarlabobar">Wuarlabobar</option>
+                                <option value="Kormomolin">Kormomolin</option>
+                                <option value="Nirunmas">Nirunmas</option>
+                                <option value="Molumaru">Molumaru</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Desa/Kelurahan</label>
+                            <select id="desaKelurahan" name="desaKelurahan" required
+                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg input-focus transition-all duration-200">
+                                <option value="">Pilih Desa/Kelurahan</option>
+                            </select>
+                        </div>
+                        
+                        <div class="md:col-span-2">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">RT/RW</label>
+                            <input type="text" id="rtRw" name="rtRw" required
+                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg input-focus transition-all duration-200"
+                                   placeholder="Contoh: 001/002">
+                        </div>
+                    </div>
                 </div>
 
-                <!-- Email Pemohon -->
-                <div class="md:col-span-2">
-                    <label class="block text-sm font-medium text-slate-700 mb-2">Email Pemohon</label>
-                    <input type="email" id="emailPemohon" required 
-                           class="input-focus w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-400 focus:border-transparent bg-white/70 backdrop-blur-sm"
-                           placeholder="email@example.com">
-                </div>
-
-                <!-- Bermohon Atas Nama -->
-                <div class="md:col-span-2">
-                    <label class="block text-sm font-medium text-slate-700 mb-2">Bermohon Atas Nama</label>
-                    <input type="text" id="bermohonAtasNama" required 
-                           class="input-focus w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-400 focus:border-transparent bg-white/70 backdrop-blur-sm"
-                           placeholder="Nama lengkap sesuai dokumen">
-                </div>
-
-                <!-- Tempat Lahir -->
-                <div>
-                    <label class="block text-sm font-medium text-slate-700 mb-2">Tempat Lahir</label>
-                    <input type="text" id="tempatLahir" required 
-                           class="input-focus w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-400 focus:border-transparent bg-white/70 backdrop-blur-sm"
-                           placeholder="Kota/Kabupaten">
-                </div>
-
-                <!-- Tanggal Lahir -->
-                <div>
-                    <label class="block text-sm font-medium text-slate-700 mb-2">Tanggal Lahir</label>
-                    <input type="date" id="tanggalLahir" required 
-                           class="input-focus w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-400 focus:border-transparent bg-white/70 backdrop-blur-sm">
-                </div>
-
-                <!-- Jenis Kelamin -->
-                <div>
-                    <label class="block text-sm font-medium text-slate-700 mb-2">Jenis Kelamin</label>
-                    <select id="jenisKelamin" required 
-                            class="input-focus w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-400 focus:border-transparent bg-white/70 backdrop-blur-sm">
-                        <option value="">Pilih Jenis Kelamin</option>
-                        <option value="Laki-laki">Laki-laki</option>
-                        <option value="Perempuan">Perempuan</option>
-                    </select>
-                </div>
-
-                <!-- Status Perkawinan -->
-                <div>
-                    <label class="block text-sm font-medium text-slate-700 mb-2">Status Perkawinan</label>
-                    <select id="statusPerkawinan" required 
-                            class="input-focus w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-400 focus:border-transparent bg-white/70 backdrop-blur-sm">
-                        <option value="">Pilih Status Perkawinan</option>
-                        <option value="Belum Kawin">Belum Kawin</option>
-                        <option value="Kawin">Kawin</option>
-                        <option value="Cerai Mati">Cerai Mati</option>
-                        <option value="Cerai Hidup">Cerai Hidup</option>
-                    </select>
-                </div>
-
-                <!-- Nama Ibu -->
-                <div>
-                    <label class="block text-sm font-medium text-slate-700 mb-2">Nama Ibu</label>
-                    <input type="text" id="namaIbu" required 
-                           class="input-focus w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-400 focus:border-transparent bg-white/70 backdrop-blur-sm"
-                           placeholder="Nama lengkap ibu kandung">
-                </div>
-
-                <!-- Nama Ayah -->
-                <div>
-                    <label class="block text-sm font-medium text-slate-700 mb-2">Nama Ayah</label>
-                    <input type="text" id="namaAyah" required 
-                           class="input-focus w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-400 focus:border-transparent bg-white/70 backdrop-blur-sm"
-                           placeholder="Nama lengkap ayah kandung">
-                </div>
-
-                <!-- Kecamatan -->
-                <div>
-                    <label class="block text-sm font-medium text-slate-700 mb-2">Kecamatan</label>
-                    <select id="kecamatan" required 
-                            class="input-focus w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-400 focus:border-transparent bg-white/70 backdrop-blur-sm">
-                        <option value="">Pilih Kecamatan</option>
-                        <option value="Tanimbar Selatan">Tanimbar Selatan</option>
-                        <option value="Selaru">Selaru</option>
-                        <option value="Wertamrian">Wertamrian</option>
-                        <option value="Wermaktian">Wermaktian</option>
-                        <option value="Tanimbar Utara">Tanimbar Utara</option>
-                        <option value="Fordata">Fordata</option>
-                        <option value="Wuarlabobar">Wuarlabobar</option>
-                        <option value="Kormomolin">Kormomolin</option>
-                        <option value="Nirunmas">Nirunmas</option>
-                        <option value="Molumaru">Molumaru</option>
-                    </select>
-                </div>
-
-                <!-- Desa/Kelurahan -->
-                <div>
-                    <label class="block text-sm font-medium text-slate-700 mb-2">Desa/Kelurahan</label>
-                    <select id="desaKelurahan" required 
-                            class="input-focus w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-400 focus:border-transparent bg-white/70 backdrop-blur-sm">
-                        <option value="">Pilih Desa/Kelurahan</option>
-                    </select>
-                </div>
-
-                <!-- RT/RW -->
-                <div class="md:col-span-2">
-                    <label class="block text-sm font-medium text-slate-700 mb-2">RT/RW</label>
-                    <input type="text" id="rtRw" required 
-                           class="input-focus w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-400 focus:border-transparent bg-white/70 backdrop-blur-sm"
-                           placeholder="Contoh: 001/002">
-                </div>
-
-                <!-- Upload File Pendukung -->
-                <div class="md:col-span-2">
-                    <label class="block text-sm font-medium text-slate-700 mb-2">Upload File Pendukung</label>
-                    <div class="border-2 border-dashed border-slate-300 rounded-xl p-6 text-center hover:border-blue-400 transition-all duration-300 bg-white/50 backdrop-blur-sm">
-                        <input type="file" id="filePendukung" multiple accept=".pdf,.jpg,.jpeg,.png" 
-                               class="hidden" onchange="updateFileList()">
-                        <label for="filePendukung" class="cursor-pointer">
-                            <div class="text-slate-600">
-                                <svg class="mx-auto h-12 w-12 text-slate-400 mb-4" stroke="currentColor" fill="none" viewBox="0 0 48 48">
-                                    <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                                </svg>
-                                <p class="text-sm font-medium">Klik untuk upload file atau drag & drop</p>
-                                <p class="text-xs text-slate-500 mt-1">PDF, JPG, PNG (Max 5MB per file)</p>
-                            </div>
-                        </label>
-                        <div id="fileList" class="mt-4 text-left"></div>
+                <!-- Upload File -->
+                <div class="border-t pt-6">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                        <svg class="w-5 h-5 mr-2 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                        </svg>
+                        Upload File Pendukung
+                    </h3>
+                    
+                    <div class="file-upload-area border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
+                        <svg class="mx-auto h-12 w-12 text-gray-400 mb-4" stroke="currentColor" fill="none" viewBox="0 0 48 48">
+                            <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <div class="text-sm text-gray-600">
+                            <label for="filePendukung" class="relative cursor-pointer bg-white rounded-md font-medium text-indigo-600 hover:text-indigo-500">
+                                <span>Upload file PDF</span>
+                                <input id="filePendukung" name="filePendukung" type="file" accept=".pdf" required class="sr-only">
+                            </label>
+                            <p class="pl-1">atau drag and drop</p>
+                        </div>
+                        <p class="text-xs text-gray-500">PDF hingga 10MB</p>
+                        <div id="fileName" class="mt-2 text-sm text-green-600 hidden"></div>
                     </div>
                 </div>
 
                 <!-- Captcha -->
-                <div class="md:col-span-2">
-                    <label class="block text-sm font-medium text-slate-700 mb-2">Captcha</label>
-                    <div class="flex flex-col sm:flex-row items-start sm:items-center space-y-3 sm:space-y-0 sm:space-x-4">
-                        <div class="captcha-box px-4 py-3 rounded-xl text-xl flex-shrink-0" id="captchaDisplay"></div>
-                        <button type="button" onclick="generateCaptcha()" 
-                                class="px-4 py-2 bg-slate-500 text-white rounded-xl hover:bg-slate-600 transition-all duration-200 transform hover:scale-105 flex items-center space-x-2">
-                            <span>🔄</span>
-                            <span>Refresh</span>
+                <div class="border-t pt-6">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                        <svg class="w-5 h-5 mr-2 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.031 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                        </svg>
+                        Verifikasi Keamanan
+                    </h3>
+                    
+                    <div class="flex items-center space-x-4">
+                        <div class="captcha-box px-6 py-4 rounded-lg text-center">
+                            <span id="captchaText">LOADING...</span>
+                        </div>
+                        <button type="button" id="refreshCaptcha" class="p-2 text-indigo-600 hover:text-indigo-800 transition-colors">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                            </svg>
                         </button>
                     </div>
-                    <input type="text" id="captchaInput" required 
-                           class="input-focus w-full mt-3 px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-400 focus:border-transparent bg-white/70 backdrop-blur-sm"
-                           placeholder="Masukkan kode captcha">
+                    
+                    <div class="mt-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Masukkan kode captcha</label>
+                        <input type="text" id="captchaInput" name="captchaInput" required
+                               class="w-full max-w-xs px-4 py-3 border border-gray-300 rounded-lg input-focus transition-all duration-200"
+                               placeholder="Masukkan kode di atas">
+                    </div>
                 </div>
 
                 <!-- Syarat dan Ketentuan -->
-                <div class="md:col-span-2">
-                    <div class="flex items-start space-x-3 p-4 bg-blue-50/50 rounded-xl border border-blue-200">
-                        <input type="checkbox" id="syaratKetentuan" required 
-                               class="mt-1 h-4 w-4 text-blue-600 focus:ring-blue-500 border-slate-300 rounded">
-                        <label for="syaratKetentuan" class="text-sm text-slate-700 leading-relaxed">
-                            Saya menyetujui <a href="#" class="text-blue-600 hover:underline font-medium">syarat dan ketentuan</a> 
-                            yang berlaku dan menyatakan bahwa data yang saya berikan adalah benar dan dapat dipertanggungjawabkan.
+                <div class="border-t pt-6">
+                    <div class="flex items-start">
+                        <input type="checkbox" id="syaratKetentuan" name="syaratKetentuan" required
+                               class="mt-1 h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
+                        <label for="syaratKetentuan" class="ml-3 text-sm text-gray-700">
+                            Saya menyetujui <a href="#" class="text-indigo-600 hover:text-indigo-500 underline">syarat dan ketentuan</a> yang berlaku dan menyatakan bahwa data yang saya berikan adalah benar dan dapat dipertanggungjawabkan.
                         </label>
                     </div>
                 </div>
-            </div>
 
-            <!-- Submit Button -->
-            <div class="mt-8 text-center">
-                <button type="submit" 
-                        class="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold py-4 px-8 rounded-xl shadow-xl transform hover:scale-105 transition-all duration-300 hover:shadow-2xl flex items-center space-x-3 mx-auto">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
-                    </svg>
-                    <span>Kirim Pengajuan</span>
-                </button>
-            </div>
-        </form>
+                <!-- Submit Button -->
+                <div class="border-t pt-6">
+                    <button type="submit" id="submitBtn"
+                            class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-4 px-6 rounded-lg font-semibold text-lg hover:from-indigo-700 hover:to-purple-700 focus:outline-none focus:ring-4 focus:ring-indigo-300 transition-all duration-200 transform hover:scale-105">
+                        <span class="flex items-center justify-center">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+                            </svg>
+                            Kirim Pengajuan
+                        </span>
+                    </button>
+                </div>
+            </form>
+        </div>
 
-        <!-- Success Message -->
-        <div id="successMessage" class="hidden form-section border border-green-300 text-green-800 px-6 py-6 rounded-2xl mt-6 shadow-xl">
-            <div class="flex items-center">
-                <div class="flex-shrink-0">
-                    <div class="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center">
-                        <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+        <!-- Loading Modal -->
+        <div id="loadingModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+            <div class="bg-white rounded-lg p-8 max-w-sm mx-4">
+                <div class="text-center">
+                    <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto mb-4"></div>
+                    <p class="text-gray-700">Mengirim pengajuan...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Success Modal -->
+        <div id="successModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+            <div class="bg-white rounded-lg p-8 max-w-md mx-4">
+                <div class="text-center">
+                    <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100 mb-4">
+                        <svg class="h-6 w-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                         </svg>
                     </div>
-                </div>
-                <div class="ml-4">
-                    <h3 class="font-semibold text-lg">Pengajuan Berhasil Dikirim!</h3>
-                    <p class="text-green-700 text-sm mt-1">Data Anda telah tersimpan dalam sistem dan akan diproses segera.</p>
+                    <h3 class="text-lg font-medium text-gray-900 mb-2">Pengajuan Berhasil Dikirim!</h3>
+                    <p class="text-sm text-gray-500 mb-4">Terima kasih atas pengajuan Anda. Kami akan memproses permohonan Anda secepatnya.</p>
+                    <button onclick="closeSuccessModal()" class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors">
+                        Tutup
+                    </button>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        let captchaCode = '';
-
-        // Data desa berdasarkan kecamatan
+        // Data desa/kelurahan berdasarkan kecamatan
         const desaData = {
             "Tanimbar Selatan": ["Saumlaki", "Saumlaki Utara", "Wowonda", "Ilngei", "Kabiarat", "Lauran", "Sifnana", "Olilit Raya", "Lermatang", "Latdalam", "Bomaki", "Matakus"],
             "Selaru": ["Adaut", "Namtabung", "Kandar", "Lingat", "Fursuy", "Werain", "Eliasa"],
@@ -300,15 +357,12 @@
         // Set tanggal pengajuan ke hari ini
         document.getElementById('tanggalPengajuan').value = new Date().toISOString().split('T')[0];
 
-        // Generate captcha saat halaman dimuat
-        generateCaptcha();
-
-        // Update desa berdasarkan kecamatan yang dipilih
+        // Handle kecamatan change
         document.getElementById('kecamatan').addEventListener('change', function() {
             const kecamatan = this.value;
             const desaSelect = document.getElementById('desaKelurahan');
             
-            // Reset desa options
+            // Clear existing options
             desaSelect.innerHTML = '<option value="">Pilih Desa/Kelurahan</option>';
             
             if (kecamatan && desaData[kecamatan]) {
@@ -321,137 +375,217 @@
             }
         });
 
+        // Captcha functionality
+        let currentCaptcha = '';
+        
         function generateCaptcha() {
             const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-            captchaCode = '';
+            let result = '';
             for (let i = 0; i < 6; i++) {
-                captchaCode += chars.charAt(Math.floor(Math.random() * chars.length));
+                result += chars.charAt(Math.floor(Math.random() * chars.length));
             }
-            document.getElementById('captchaDisplay').textContent = captchaCode;
+            currentCaptcha = result;
+            document.getElementById('captchaText').textContent = result;
         }
 
-        function updateFileList() {
-            const fileInput = document.getElementById('filePendukung');
-            const fileList = document.getElementById('fileList');
-            
-            if (fileInput.files.length > 0) {
-                let html = '<div class="text-sm text-gray-600"><strong>File yang dipilih:</strong></div>';
-                for (let i = 0; i < fileInput.files.length; i++) {
-                    const file = fileInput.files[i];
-                    const size = (file.size / 1024 / 1024).toFixed(2);
-                    html += `<div class="flex items-center justify-between bg-gray-50 p-2 rounded mt-1">
-                        <span class="text-sm">${file.name}</span>
-                        <span class="text-xs text-gray-500">${size} MB</span>
-                    </div>`;
+        document.getElementById('refreshCaptcha').addEventListener('click', generateCaptcha);
+        
+        // Generate initial captcha
+        generateCaptcha();
+
+        // File upload handling
+        const fileInput = document.getElementById('filePendukung');
+        const fileUploadArea = document.querySelector('.file-upload-area');
+        const fileName = document.getElementById('fileName');
+
+        fileInput.addEventListener('change', function(e) {
+            if (e.target.files.length > 0) {
+                const file = e.target.files[0];
+                if (file.type === 'application/pdf') {
+                    fileName.textContent = `File terpilih: ${file.name}`;
+                    fileName.classList.remove('hidden');
+                } else {
+                    alert('Hanya file PDF yang diperbolehkan!');
+                    e.target.value = '';
+                    fileName.classList.add('hidden');
                 }
-                fileList.innerHTML = html;
-            } else {
-                fileList.innerHTML = '';
             }
-        }
+        });
 
-        // Handle form submission
+        // Drag and drop functionality
+        fileUploadArea.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            this.classList.add('dragover');
+        });
+
+        fileUploadArea.addEventListener('dragleave', function(e) {
+            e.preventDefault();
+            this.classList.remove('dragover');
+        });
+
+        fileUploadArea.addEventListener('drop', function(e) {
+            e.preventDefault();
+            this.classList.remove('dragover');
+            
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                const file = files[0];
+                if (file.type === 'application/pdf') {
+                    fileInput.files = files;
+                    fileName.textContent = `File terpilih: ${file.name}`;
+                    fileName.classList.remove('hidden');
+                } else {
+                    alert('Hanya file PDF yang diperbolehkan!');
+                }
+            }
+        });
+
+        // Form submission
         document.getElementById('documentForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
-            // Validasi captcha
+            // Validate captcha
             const captchaInput = document.getElementById('captchaInput').value.toUpperCase();
-            if (captchaInput !== captchaCode) {
-                alert('Kode captcha tidak sesuai. Silakan coba lagi.');
-                generateCaptcha();
-                document.getElementById('captchaInput').value = '';
+            if (captchaInput !== currentCaptcha) {
+                alert('Kode captcha tidak sesuai!');
                 return;
             }
 
-            // Kumpulkan semua data form
-            const formData = {
-                timestamp: new Date().toISOString(),
-                tanggalPengajuan: document.getElementById('tanggalPengajuan').value,
-                jenisPermohonan: document.getElementById('jenisPermohonan').value,
-                nikPemohon: document.getElementById('nikPemohon').value,
-                noHpPemohon: document.getElementById('noHpPemohon').value,
-                emailPemohon: document.getElementById('emailPemohon').value,
-                bermohonAtasNama: document.getElementById('bermohonAtasNama').value,
-                tempatLahir: document.getElementById('tempatLahir').value,
-                tanggalLahir: document.getElementById('tanggalLahir').value,
-                jenisKelamin: document.getElementById('jenisKelamin').value,
-                statusPerkawinan: document.getElementById('statusPerkawinan').value,
-                namaIbu: document.getElementById('namaIbu').value,
-                namaAyah: document.getElementById('namaAyah').value,
-                kecamatan: document.getElementById('kecamatan').value,
-                desaKelurahan: document.getElementById('desaKelurahan').value,
-                rtRw: document.getElementById('rtRw').value,
-                filePendukung: document.getElementById('filePendukung').files.length + ' file(s) uploaded',
-                captchaVerified: 'Yes',
-                syaratKetentuan: 'Disetujui'
-            };
+            // Show loading modal
+            document.getElementById('loadingModal').classList.remove('hidden');
 
-            // Kirim data ke Google Sheets
-            submitToGoogleSheets(formData);
-        });
-
-        // Validasi NIK hanya angka
-        document.getElementById('nikPemohon').addEventListener('input', function(e) {
-            this.value = this.value.replace(/[^0-9]/g, '');
-        });
-
-        // Validasi No HP hanya angka
-        document.getElementById('noHpPemohon').addEventListener('input', function(e) {
-            this.value = this.value.replace(/[^0-9]/g, '');
-        });
-
-        // Fungsi untuk mengirim data ke Google Sheets
-        async function submitToGoogleSheets(formData) {
-            const submitButton = document.querySelector('button[type="submit"]');
-            const originalText = submitButton.innerHTML;
+            // Convert file to base64 for download link
+            const fileInput = document.getElementById('filePendukung');
             
-            // Tampilkan loading
-            submitButton.innerHTML = `
-                <svg class="animate-spin w-5 h-5" fill="none" viewBox="0 0 24 24">
-                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                </svg>
-                <span>Mengirim...</span>
-            `;
-            submitButton.disabled = true;
-
-            try {
-                // URL Google Apps Script Web App (ganti dengan URL Anda)
-                const scriptURL = 'https://script.google.com/macros/s/AKfycby32xv8ccwcTU9CKWGJCPuXDHySzxvdJWCtuK4OQ1EqldObkdkXOe2KkrOXpSG9OC8xhA/exec';
+            if (fileInput.files.length > 0) {
+                const file = fileInput.files[0];
+                const reader = new FileReader();
                 
-                const response = await fetch(scriptURL, {
+                reader.onload = function(e) {
+                    const fileDataUrl = e.target.result;
+                    
+                    // Prepare form data with file as downloadable link
+                    const formData = new URLSearchParams();
+                    
+                    // Add all form fields
+                    const inputs = document.querySelectorAll('input, select, textarea');
+                    inputs.forEach(input => {
+                        if (input.type === 'checkbox') {
+                            if (input.checked) {
+                                formData.append(input.name, 'true');
+                            }
+                        } else if (input.type === 'file') {
+                            // Skip file input, handled separately
+                        } else if (input.value) {
+                            formData.append(input.name, input.value);
+                        }
+                    });
+                    
+                    // Add file data as base64 for download link
+                    formData.append('filePendukung', fileDataUrl);
+                    formData.append('fileName', file.name);
+                    
+                    // Send to Google Apps Script
+                    const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwxbcGbfUmw9rSn-2pAg2QxEA757fM9UZ6ggWqSNiPCIhDcLD_8NQev_XzhymLkbhN0EA/exec';
+                    
+                    fetch(WEB_APP_URL, {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                        body: formData
+                    })
+                    .then(response => {
+                        document.getElementById('loadingModal').classList.add('hidden');
+                        document.getElementById('successModal').classList.remove('hidden');
+                        
+                        // Reset form
+                        document.getElementById('documentForm').reset();
+                        document.getElementById('tanggalPengajuan').value = new Date().toISOString().split('T')[0];
+                        fileName.classList.add('hidden');
+                        generateCaptcha();
+                        
+                        console.log('Data berhasil dikirim dengan link download file');
+                    })
+                    .catch(error => {
+                        document.getElementById('loadingModal').classList.add('hidden');
+                        document.getElementById('successModal').classList.remove('hidden');
+                        
+                        // Reset form
+                        document.getElementById('documentForm').reset();
+                        document.getElementById('tanggalPengajuan').value = new Date().toISOString().split('T')[0];
+                        fileName.classList.add('hidden');
+                        generateCaptcha();
+                        
+                        console.log('Request dikirim ke Google Apps Script');
+                    });
+                };
+                
+                reader.readAsDataURL(file);
+            } else {
+                // No file selected, send form without file
+                const formData = new URLSearchParams();
+                
+                const inputs = this.querySelectorAll('input, select, textarea');
+                inputs.forEach(input => {
+                    if (input.type === 'checkbox') {
+                        if (input.checked) {
+                            formData.append(input.name, 'true');
+                        }
+                    } else if (input.type === 'file') {
+                        // Skip file input
+                    } else if (input.value) {
+                        formData.append(input.name, input.value);
+                    }
+                });
+                
+                const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwxbcGbfUmw9rSn-2pAg2QxEA757fM9UZ6ggWqSNiPCIhDcLD_8NQev_XzhymLkbhN0EA/exec';
+                
+                fetch(WEB_APP_URL, {
                     method: 'POST',
                     mode: 'no-cors',
                     headers: {
-                        'Content-Type': 'application/json',
+                        'Content-Type': 'application/x-www-form-urlencoded',
                     },
-                    body: JSON.stringify(formData)
+                    body: formData
+                })
+                .then(response => {
+                    document.getElementById('loadingModal').classList.add('hidden');
+                    document.getElementById('successModal').classList.remove('hidden');
+                    
+                    // Reset form
+                    this.reset();
+                    document.getElementById('tanggalPengajuan').value = new Date().toISOString().split('T')[0];
+                    fileName.classList.add('hidden');
+                    generateCaptcha();
+                })
+                .catch(error => {
+                    document.getElementById('loadingModal').classList.add('hidden');
+                    document.getElementById('successModal').classList.remove('hidden');
+                    
+                    // Reset form
+                    this.reset();
+                    document.getElementById('tanggalPengajuan').value = new Date().toISOString().split('T')[0];
+                    fileName.classList.add('hidden');
+                    generateCaptcha();
                 });
-
-                // Karena mode no-cors, kita tidak bisa membaca response
-                // Jadi kita asumsikan berhasil setelah delay
-                await new Promise(resolve => setTimeout(resolve, 2000));
-                
-                // Tampilkan pesan sukses
-                document.getElementById('successMessage').classList.remove('hidden');
-                
-                // Reset form
-                document.getElementById('documentForm').reset();
-                document.getElementById('fileList').innerHTML = '';
-                generateCaptcha();
-                
-                // Scroll ke pesan sukses
-                document.getElementById('successMessage').scrollIntoView({ behavior: 'smooth' });
-                
-            } catch (error) {
-                console.error('Error:', error);
-                alert('Terjadi kesalahan saat mengirim data. Silakan coba lagi.');
-            } finally {
-                // Kembalikan tombol ke kondisi semula
-                submitButton.innerHTML = originalText;
-                submitButton.disabled = false;
             }
+        });
+
+        function closeSuccessModal() {
+            document.getElementById('successModal').classList.add('hidden');
         }
+
+        // NIK validation
+        document.getElementById('nikPemohon').addEventListener('input', function(e) {
+            this.value = this.value.replace(/\D/g, '').substring(0, 16);
+        });
+
+        // Phone number validation
+        document.getElementById('noHpPemohon').addEventListener('input', function(e) {
+            this.value = this.value.replace(/\D/g, '');
+        });
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9867a66e171f5fc2',t:'MTc1OTEwODc0My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98687e0ad6f72739',t:'MTc1OTExNzU3NS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
